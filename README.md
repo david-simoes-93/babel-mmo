@@ -13,7 +13,9 @@ There is no concept of XP or levels in Babel. There are different worlds, the fl
 ...
 
 There could even be floors representing different times of the same place (like floor 10 you would meet some NPCs on a city, floor 21 you would find the city in ruins after some attack, half the NPCs dead, and the other asking for your help).
+
 When players ascend to the next floor, a copy of their character is made that ascends, while another remains. For example, Daniela might want to return to Floor 1. The character she plays there is exactly the same as it was when she ascended. If she gets new gear or abilities, they won't be reflected on her character on floor 2. Carefully done requirements must be made to ensure that any abilities the characters would need on floor 2 are set as requirements on floor 1. Any gear or abilities obtained in floor 2 will also not be reflected on her floor 1 character. She essentially has 2 characters by that point. Players may wish to return to lower floors for completionism (achievements, etc), events (seasonal or special events on specific floors), or to help friends ascent. Gear and abilities is the only thing that distinguishes all the characters in a world, which on one hand prevents high-level players from killing low-level players, but might also lead to overgeared players doing the same (so designing proper combat and safe areas is clearly mandatory).
+
 For server health, we would want to keep a decent amount of players per floor. Because most players accumulate on the top floors, we would probably have lower floors with a single server, and top floors with multiple ones. Players could choose their server per floor, and once the maximum floor changed (as more floors are added), servers would be merged. Bots could also be considered to fill events requiring a specific amount of people (like the 50-player arena on Floor 1). It is important to keep the amount of servers fluid: react quickly to player-base trends, split and merge as necessary.
 
 What classes are there in Babel?
@@ -43,12 +45,12 @@ What bosses are currently implemented?
 ## Building Babel
 
 To deploy, first build the server and then the client (or run the client inside Unity). 
+
 For the server, on Unity, go to `File` > `Build Settings` and build `InitialScene`, `MainMenu`, and `NorseMap` with the `Server Build` option enabled. Pick a folder to build it on and run `BabelUnity.exe` to start the server.
+
 For the client, either build Babel without the `Server Build` option or just run things from within the Unity Editor.
 
-[Example](https://youtu.be/r_ZONC4cSHM)
-
-You need a server running locally before running the client. You can run multiple clients on the same server. Download compiled binares [here](https://www.dropbox.com/s/m9rtldw3tq2c121/babel.zip).
+You need a server running before running the client. You can run multiple clients on the same server. Download compiled binares [here](https://www.dropbox.com/s/m9rtldw3tq2c121/babel.zip).
 
 ## TODO
 
