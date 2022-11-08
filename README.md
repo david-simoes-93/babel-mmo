@@ -50,7 +50,7 @@ For the server, on Unity, go to `File` > `Build Settings` and build `InitialScen
 
 For the client, either build Babel without the `Server Build` option or just run things from within the Unity Editor.
 
-You need a server running before running the client. You can run multiple clients on the same server. Download compiled binares [here](https://www.dropbox.com/s/m9rtldw3tq2c121/babel.zip).
+You need a server running before running the client. You can run multiple clients on the same server. Download compiled binares [here](https://www.dropbox.com/s/w9c7ops67lojzrl/babel.zip).
 
 ## TODO
 
