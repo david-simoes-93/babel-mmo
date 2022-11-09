@@ -11,6 +11,8 @@ internal interface ILocalEffect
     /// </summary>
     /// <returns>Returns true when LocalEffect has terminated and should be removed from any list containing it</returns>
     bool Update();
+
+    void Destroy();
 }
 
 /// <summary>
@@ -18,24 +20,39 @@ internal interface ILocalEffect
 /// </summary>
 internal class LocalEntityManager
 {
-    private List<ILocalEffect> combatEffects_;
+    private Dictionary<int, ILocalEffect> combatEffects_;
+
+    private int effectUidCounter;
 
     /// <summary>
     /// Constructs the LEM
     /// </summary>
     internal LocalEntityManager()
     {
-        // list of <initial_spawn_time, associated game object>
-        combatEffects_ = new List<ILocalEffect>();
+        // list of <effect_uid, effect>
+        combatEffects_ = new Dictionary<int, ILocalEffect>();
+        effectUidCounter = 0;
     }
 
     /// <summary>
     /// Adds a new LocalEffect to the LEM
     /// </summary>
     /// <param name="effect"></param>
-    internal void AddLocalEffect(ILocalEffect effect)
+    internal int AddLocalEffect(ILocalEffect effect)
     {
-        combatEffects_.Add(effect);
+        combatEffects_.Add(++effectUidCounter, effect);
+        return effectUidCounter;
+    }
+
+    internal void Remove(int effect_uid)
+    {
+        if (!combatEffects_.ContainsKey(effect_uid))
+        {
+            GameDebug.LogWarning("Trying to destroy a LocalEffect that doesn't exist: " + effect_uid);
+            return;
+        }
+        combatEffects_[effect_uid].Destroy();
+        combatEffects_.Remove(effect_uid);
     }
 
     /// <summary>
@@ -43,8 +60,22 @@ internal class LocalEntityManager
     /// </summary>
     internal void UpdateLocalEffects()
     {
-        // call Update() on all LocalEffects and remove those that return true
-        combatEffects_.RemoveAll(item => item.Update());
+        List<int> effectsToRemove = new List<int>();
+
+        // call Update() on all LocalEffects
+        foreach (KeyValuePair<int, ILocalEffect> entry in combatEffects_)
+        {
+            if (entry.Value.Update())
+            {
+                effectsToRemove.Add(entry.Key);
+            }
+        }
+
+        // Remove those that return true
+        foreach (int key in effectsToRemove)
+        {
+            Remove(key);
+        }
     }
 
     /// <summary>
@@ -52,6 +83,6 @@ internal class LocalEntityManager
     /// </summary>
     internal void ClearAll()
     {
-        combatEffects_.RemoveRange(0, combatEffects_.Count);
+        combatEffects_.Clear();
     }
 }

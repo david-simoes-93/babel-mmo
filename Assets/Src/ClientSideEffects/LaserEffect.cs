@@ -53,6 +53,14 @@ internal class LaserEffect : ILocalEffect
     }
 
     /// <summary>
+    /// Destroys the game object
+    /// </summary>
+    public void Destroy()
+    {
+        Object.Destroy(myGameObject_);
+    }
+
+    /// <summary>
     /// Decays laser over time and destroys it when it's gone
     /// </summary>
     /// <returns></returns>
@@ -63,7 +71,6 @@ internal class LaserEffect : ILocalEffect
 
         if (line_.startWidth <= 0)
         {
-            Object.Destroy(myGameObject_);
             return true;
         }
 

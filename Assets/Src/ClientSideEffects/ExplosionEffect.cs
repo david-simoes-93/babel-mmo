@@ -23,6 +23,14 @@ internal class ExplosionEffect : ILocalEffect
     }
 
     /// <summary>
+    /// Destroys the game object
+    /// </summary>
+    public void Destroy()
+    {
+        Object.Destroy(myGameObject_);
+    }
+
+    /// <summary>
     /// Destroys the explosion when it has extinguished
     /// </summary>
     /// <returns></returns>
@@ -30,7 +38,6 @@ internal class ExplosionEffect : ILocalEffect
     {
         if (Globals.currTime_ms > destroyTime_)
         {
-            Object.Destroy(myGameObject_);
             return true;
         }
         return false;

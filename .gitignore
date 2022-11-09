@@ -5,6 +5,7 @@ Username.txt
 
 Assets/Example*
 UserSettings/*
+.vscode/*
 
 /[Ll]ibrary/
 /[Tt]emp/

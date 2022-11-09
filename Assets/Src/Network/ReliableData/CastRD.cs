@@ -75,7 +75,7 @@ internal class CastRD : ReliableData
         int uid = BitConverter.ToInt32(bytes, start + 4);
         Globals.CastCode type = (Globals.CastCode)BitConverter.ToInt32(bytes, start + 8);
 
-        GameDebug.Log("Got TCP Cast by " + uid + " of " + type);
+        GameDebug.Log("Got TCP Cast by entity " + uid + " of " + type);
 
         return new CastRD(uid, type);
     }
@@ -86,6 +86,6 @@ internal class CastRD : ReliableData
     /// <returns>Human-readable string representation</returns>
     public override string ToString()
     {
-        return "Cast by " + caster_uid + " of " + type;
+        return "Cast by entity " + caster_uid + " of " + type;
     }
 }

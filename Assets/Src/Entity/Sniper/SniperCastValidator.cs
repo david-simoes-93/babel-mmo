@@ -18,6 +18,7 @@ internal class SniperCastValidator : BaseCastValidator
         reloadingTwo_ = false,
         reloadingThree_ = false;
     private int currentWeaponEquipped_ = 0;
+    private int curr_weapon_effect_uid_;
 
     internal const int kWeaponOneLeftCooldown = 100,
         kWeaponOneLeftRange = 50,
@@ -227,6 +228,12 @@ internal class SniperCastValidator : BaseCastValidator
         timeWeaponTwoCooldownEnded_ = currTime_ms + 1;
         timeWeaponThreeCooldownStarted_ = currTime_ms;
         timeWeaponThreeCooldownEnded_ = currTime_ms + 1;
+
+        currentWeaponEquipped_ = 0;
+#if !UNITY_SERVER
+        curr_weapon_effect_uid_ = ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new WeaponEquip(parent_, CastCode.SniperChooseWeaponOne));
+#else
+#endif
     }
 
     /// <summary>
@@ -349,6 +356,10 @@ internal class SniperCastValidator : BaseCastValidator
                 }
                 break;
             case CastCode.SniperChooseWeaponOne:
+#if !UNITY_SERVER
+                ClientWeaponEquip(rd as CastRD);
+#else
+#endif
                 HalveWeaponOneCooldown();
                 DoubleWeaponTwoCooldown();
                 DoubleWeaponThreeCooldown();
@@ -359,6 +370,10 @@ internal class SniperCastValidator : BaseCastValidator
                 }
                 break;
             case CastCode.SniperChooseWeaponTwo:
+#if !UNITY_SERVER
+                ClientWeaponEquip(rd as CastRD);
+#else
+#endif
                 DoubleWeaponOneCooldown();
                 HalveWeaponTwoCooldown();
                 DoubleWeaponThreeCooldown();
@@ -369,6 +384,10 @@ internal class SniperCastValidator : BaseCastValidator
                 }
                 break;
             case CastCode.SniperChooseWeaponThree:
+#if !UNITY_SERVER
+                ClientWeaponEquip(rd as CastRD);
+#else
+#endif
                 DoubleWeaponOneCooldown();
                 DoubleWeaponTwoCooldown();
                 HalveWeaponThreeCooldown();
@@ -733,5 +752,15 @@ internal class SniperCastValidator : BaseCastValidator
     private void ServerAttackRightWeaponThree(CastRD rd)
     {
         parent_.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, parent_.Uid, rd.type, kWeaponThreeRightHeal));
+    }
+
+    /// <summary>
+    /// Client-side call. Sniper switches weapon
+    /// </summary>
+    /// <param name="rd">the WeaponThreeFire cast</param>
+    private void ClientWeaponEquip(CastRD rd)
+    {
+        ClientGameLoop.CGL.LocalEntityManager.Remove(curr_weapon_effect_uid_);
+        curr_weapon_effect_uid_ = ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new WeaponEquip(parent_, rd.type));
     }
 }
