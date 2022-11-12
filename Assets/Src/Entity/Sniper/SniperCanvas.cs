@@ -6,13 +6,13 @@ using UnityEngine.UI;
 internal class SniperCanvas : BaseCanvas
 {
     private Text hpText_,
-        weaponOneAmmo_,
-        weaponTwoAmmo_,
-        weaponThreeAmmo_;
+        weaponRifleAmmo_,
+        weaponShotgunAmmo_,
+        weaponMedigunAmmo_;
     private Image hpBar_,
-        weaponOne_,
-        weaponTwo_,
-        weaponThree_;
+        weaponRifle_,
+        weaponShotgun_,
+        weaponMedigun_;
     private GameObject DamageIndicator_,
         CrossHair_;
     private GameObject CombatDamageLeft_,
@@ -32,15 +32,15 @@ internal class SniperCanvas : BaseCanvas
         hpBar_ = hpTransform.Find("Bar").GetComponent<Image>();
 
         var weaponsTransform = transform.Find("Weapons");
-        var weaponOneTransform = weaponsTransform.Find("WeaponOne");
-        weaponOne_ = weaponOneTransform.GetComponent<Image>();
-        weaponOneAmmo_ = weaponOneTransform.Find("Ammo").GetComponent<Text>();
-        var weaponTwoTransform = weaponsTransform.Find("WeaponTwo");
-        weaponTwo_ = weaponTwoTransform.GetComponent<Image>();
-        weaponTwoAmmo_ = weaponTwoTransform.Find("Ammo").GetComponent<Text>();
-        var weaponThreeTransform = weaponsTransform.Find("WeaponThree");
-        weaponThree_ = weaponThreeTransform.GetComponent<Image>();
-        weaponThreeAmmo_ = weaponThreeTransform.Find("Ammo").GetComponent<Text>();
+        var weaponRifleTransform = weaponsTransform.Find("WeaponOne");
+        weaponRifle_ = weaponRifleTransform.GetComponent<Image>();
+        weaponRifleAmmo_ = weaponRifleTransform.Find("Ammo").GetComponent<Text>();
+        var weaponShotgunTransform = weaponsTransform.Find("WeaponTwo");
+        weaponShotgun_ = weaponShotgunTransform.GetComponent<Image>();
+        weaponShotgunAmmo_ = weaponShotgunTransform.Find("Ammo").GetComponent<Text>();
+        var weaponMedigunTransform = weaponsTransform.Find("WeaponThree");
+        weaponMedigun_ = weaponMedigunTransform.GetComponent<Image>();
+        weaponMedigunAmmo_ = weaponMedigunTransform.Find("Ammo").GetComponent<Text>();
 
         DamageIndicator_ = transform.Find("DamageIndicator").gameObject;
         CrossHair_ = transform.Find("CrossHair").gameObject;
@@ -63,30 +63,32 @@ internal class SniperCanvas : BaseCanvas
         UpdateCombatText(currDmgMessagesLeft_);
         UpdateCombatText(currDmgMessagesRight_);
 
-        if (validator_.CurrentWeapon() == 1)
+        if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Shotgun)
         {
-            weaponOne_.color = Color.gray;
-            weaponTwo_.color = Color.white;
-            weaponThree_.color = Color.gray;
+            weaponRifle_.color = Color.gray;
+            weaponShotgun_.color = Color.white;
+            weaponMedigun_.color = Color.gray;
         }
-        else if (validator_.CurrentWeapon() == 2)
+        else if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Medigun)
         {
-            weaponOne_.color = Color.gray;
-            weaponTwo_.color = Color.gray;
-            weaponThree_.color = Color.white;
+            weaponRifle_.color = Color.gray;
+            weaponShotgun_.color = Color.gray;
+            weaponMedigun_.color = Color.white;
         }
         else
         {
-            weaponOne_.color = Color.white;
-            weaponTwo_.color = Color.gray;
-            weaponThree_.color = Color.gray;
+            weaponRifle_.color = Color.white;
+            weaponShotgun_.color = Color.gray;
+            weaponMedigun_.color = Color.gray;
         }
-        weaponOne_.fillAmount = 1 - validator_.CooldownWeaponOne();
-        weaponOneAmmo_.text = validator_.currAmmoOne_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Rifle].kMaxAmmo.ToString();
-        weaponTwo_.fillAmount = 1 - validator_.CooldownWeaponTwo();
-        weaponTwoAmmo_.text = validator_.currAmmoTwo_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Shotgun].kMaxAmmo.ToString();
-        weaponThree_.fillAmount = 1 - validator_.CooldownWeaponThree();
-        weaponThreeAmmo_.text = validator_.currAmmoThree_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Medigun].kMaxAmmo.ToString();
+        weaponRifle_.fillAmount = 1 - validator_.CooldownWeaponRifle();
+        weaponRifleAmmo_.text = validator_.currAmmoRifle_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Rifle].kMaxAmmo.ToString();
+        weaponShotgun_.fillAmount = 1 - validator_.CooldownWeaponShotgun();
+        weaponShotgunAmmo_.text =
+            validator_.currAmmoShotgun_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Shotgun].kMaxAmmo.ToString();
+        weaponMedigun_.fillAmount = 1 - validator_.CooldownWeaponMedigun();
+        weaponMedigunAmmo_.text =
+            validator_.currAmmoMedigun_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Medigun].kMaxAmmo.ToString();
     }
 
     /// <summary>
@@ -214,8 +216,8 @@ internal class SniperCanvas : BaseCanvas
             DamageIndicator_.SetActive(true);
             damageIndicatorFrameCounter_ = 0;
 
-            // If WeaponOneAlternate's explosion
-            if (rd.effect_source_type == Globals.CastCode.SniperWeaponOneAlternate)
+            // If WeaponRifleAlternate's explosion
+            if (rd.effect_source_type == Globals.CastCode.SniperWeaponRifleAlternate)
             {
                 FloatingText3D cmbtText = new FloatingText3D(target.TargetingTransform.position, rd.value.ToString(), 1000, Color.yellow);
                 ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(cmbtText);

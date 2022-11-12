@@ -17,12 +17,12 @@ internal class Globals
         FighterAttackLeft,
         FighterAttackRight,
         Spin,
-        SniperWeaponOneFire,
-        SniperWeaponOneAlternate,
-        SniperWeaponTwoFire,
-        SniperWeaponTwoAlternate,
-        SniperWeaponThreeFire,
-        SniperWeaponThreeAlternate,
+        SniperWeaponRifleFire,
+        SniperWeaponRifleAlternate,
+        SniperWeaponShotgunFire,
+        SniperWeaponShotgunAlternate,
+        SniperWeaponMedigunFire,
+        SniperWeaponMedigunAlternate,
         SniperReload,
         SniperChooseWeaponRifle,
         SniperChooseWeaponShotgun,
@@ -63,8 +63,8 @@ internal class Globals
         // TODO use a dictionary instead of if conditions to map from rd.type into bool
         return val == CastCode.Heal
             || val == CastCode.Regen
-            || val == CastCode.SniperWeaponThreeFire
-            || val == CastCode.SniperWeaponThreeAlternate
+            || val == CastCode.SniperWeaponMedigunFire
+            || val == CastCode.SniperWeaponMedigunAlternate
             || val == CastCode.MageRenew
             || val == CastCode.MageRenewEnd;
     }
@@ -98,9 +98,9 @@ internal class Globals
     internal static GameObject kExplosionPrefab = Resources.Load("Prefabs/Volumetric") as GameObject;
     internal static GameObject kFireflashPrefab = Resources.Load("Prefabs/Fireflash") as GameObject;
     internal static GameObject kLightningStrikePrefab = Resources.Load("Prefabs/LightningStrike") as GameObject;
-    internal static GameObject kSniperWeaponOne = Resources.Load("Prefabs/SniperWeapon1") as GameObject;
-    internal static GameObject kSniperWeaponTwo = Resources.Load("Prefabs/SniperWeapon2") as GameObject;
-    internal static GameObject kSniperWeaponThree = Resources.Load("Prefabs/SniperWeapon3") as GameObject;
+    internal static GameObject kSniperWeaponRifle = Resources.Load("Prefabs/SniperWeaponRifle") as GameObject;
+    internal static GameObject kSniperWeaponShotgun = Resources.Load("Prefabs/SniperWeaponShotgun") as GameObject;
+    internal static GameObject kSniperWeaponMedigun = Resources.Load("Prefabs/SniperWeaponMedigun") as GameObject;
 
     // Effects
     internal static GameObject kPoisonZonePrefab = Resources.Load("Prefabs/PoisonZone") as GameObject;

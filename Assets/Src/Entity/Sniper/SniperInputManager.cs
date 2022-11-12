@@ -264,23 +264,23 @@ internal class SniperInputManager : BaseInputManager
         }
         else if (attackLeft_)
         {
-            if (validator_.CurrentWeapon() == 0 && validator_.CanWeaponOneFire(currTime_ms))
-                Cast(CastUtils.MakeSniperWeaponOneAttack(uid_, transform.position, transform.rotation));
-            else if (validator_.CurrentWeapon() == 1 && validator_.CanWeaponTwoFire(currTime_ms))
-                Cast(CastUtils.MakeSniperWeaponTwoAttack(uid_, transform.position, transform.rotation));
-            else if (validator_.CurrentWeapon() == 2 && validator_.CanWeaponThreeFire(currTime_ms))
-                Cast(CastUtils.MakeSniperWeaponThreeAttack(uid_, transform.position, transform.rotation));
+            if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Rifle && validator_.CanWeaponRifleFire(currTime_ms))
+                Cast(CastUtils.MakeSniperWeaponRifleAttack(uid_, transform.position, transform.rotation));
+            else if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Shotgun && validator_.CanWeaponShotgunFire(currTime_ms))
+                Cast(CastUtils.MakeSniperWeaponShotgunAttack(uid_, transform.position, transform.rotation));
+            else if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Medigun && validator_.CanWeaponMedigunFire(currTime_ms))
+                Cast(CastUtils.MakeSniperWeaponMedigunAttack(uid_, transform.position, transform.rotation));
         }
         else if (attackRight_)
         {
-            if (validator_.CurrentWeapon() == 0 && validator_.CanWeaponOneAlternate(currTime_ms))
-                Cast(CastUtils.MakeSniperWeaponOneAlternateAttack(uid_, transform.position, transform.rotation));
-            else if (validator_.CurrentWeapon() == 1 && validator_.CanWeaponTwoAlternate(currTime_ms))
+            if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Rifle && validator_.CanWeaponRifleAlternate(currTime_ms))
+                Cast(CastUtils.MakeSniperWeaponRifleleAlternateAttack(uid_, transform.position, transform.rotation));
+            else if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Shotgun && validator_.CanWeaponShotgunAlternate(currTime_ms))
             {
                 // not implemented
             }
-            else if (validator_.CurrentWeapon() == 2 && validator_.CanWeaponThreeAlternate(currTime_ms))
-                Cast(CastUtils.MakeSniperWeaponThreeAlternateAttack(uid_));
+            else if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Medigun && validator_.CanWeaponMedigunAlternate(currTime_ms))
+                Cast(CastUtils.MakeSniperWeaponMedigunAlternateAttack(uid_));
         }
 
         // reload
@@ -292,13 +292,13 @@ internal class SniperInputManager : BaseInputManager
         // scroll
         if ((scrollDown_ || scrollUp_) && validator_.CanWeaponScroll(currTime_ms))
         {
-            int target = (validator_.CurrentWeapon() + (scrollUp_ ? 2 : 1)) % 3;
+            int target = ((int)validator_.CurrentWeapon() + (scrollUp_ ? 2 : 1)) % 3;
             if (target == 1)
-                Cast(CastUtils.MakeChooseWeaponTwo(uid_));
+                Cast(CastUtils.MakeChooseWeaponShotgun(uid_));
             else if (target == 2)
-                Cast(CastUtils.MakeChooseWeaponThree(uid_));
+                Cast(CastUtils.MakeChooseWeaponMedigun(uid_));
             else
-                Cast(CastUtils.MakeChooseWeaponOne(uid_));
+                Cast(CastUtils.MakeChooseWeaponRiflele(uid_));
         }
 
         // Build the CharacterInputs struct

@@ -23,34 +23,34 @@ public class CastUtils : ScriptableObject
         return new TargetedCastRD(uid, target_uid, Globals.CastCode.MonsterRangedAttack);
     }
 
-    static internal VectorCastRD MakeSniperWeaponOneAttack(int uid, Vector3 position, Quaternion rotation)
+    static internal VectorCastRD MakeSniperWeaponRifleAttack(int uid, Vector3 position, Quaternion rotation)
     {
-        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponOneFire, position, rotation);
+        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponRifleFire, position, rotation);
     }
 
-    static internal VectorCastRD MakeSniperWeaponOneAlternateAttack(int uid, Vector3 position, Quaternion rotation)
+    static internal VectorCastRD MakeSniperWeaponRifleleAlternateAttack(int uid, Vector3 position, Quaternion rotation)
     {
-        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponOneAlternate, position, rotation);
+        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponRifleAlternate, position, rotation);
     }
 
-    static internal VectorCastRD MakeSniperWeaponTwoAttack(int uid, Vector3 position, Quaternion rotation)
+    static internal VectorCastRD MakeSniperWeaponShotgunAttack(int uid, Vector3 position, Quaternion rotation)
     {
-        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponTwoFire, position, rotation);
+        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponShotgunFire, position, rotation);
     }
 
-    static internal VectorCastRD MakeSniperWeaponTwoAlternateAttack(int uid, Vector3 position, Quaternion rotation)
+    static internal VectorCastRD MakeSniperWeaponShotgunAlternateAttack(int uid, Vector3 position, Quaternion rotation)
     {
-        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponTwoAlternate, position, rotation);
+        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponShotgunAlternate, position, rotation);
     }
 
-    static internal VectorCastRD MakeSniperWeaponThreeAttack(int uid, Vector3 position, Quaternion rotation)
+    static internal VectorCastRD MakeSniperWeaponMedigunAttack(int uid, Vector3 position, Quaternion rotation)
     {
-        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponThreeFire, position, rotation);
+        return new VectorCastRD(uid, Globals.CastCode.SniperWeaponMedigunFire, position, rotation);
     }
 
-    static internal CastRD MakeSniperWeaponThreeAlternateAttack(int uid)
+    static internal CastRD MakeSniperWeaponMedigunAlternateAttack(int uid)
     {
-        return new CastRD(uid, Globals.CastCode.SniperWeaponThreeAlternate);
+        return new CastRD(uid, Globals.CastCode.SniperWeaponMedigunAlternate);
     }
 
     static internal CastRD MakeReload(int uid)
@@ -58,17 +58,17 @@ public class CastUtils : ScriptableObject
         return new CastRD(uid, Globals.CastCode.SniperReload);
     }
 
-    static internal CastRD MakeChooseWeaponOne(int uid)
+    static internal CastRD MakeChooseWeaponRiflele(int uid)
     {
         return new CastRD(uid, Globals.CastCode.SniperChooseWeaponRifle);
     }
 
-    static internal CastRD MakeChooseWeaponTwo(int uid)
+    static internal CastRD MakeChooseWeaponShotgun(int uid)
     {
         return new CastRD(uid, Globals.CastCode.SniperChooseWeaponShotgun);
     }
 
-    static internal CastRD MakeChooseWeaponThree(int uid)
+    static internal CastRD MakeChooseWeaponMedigun(int uid)
     {
         return new CastRD(uid, Globals.CastCode.SniperChooseWeaponMedigun);
     }

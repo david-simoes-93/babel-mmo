@@ -115,6 +115,8 @@ internal class WorldServerHandler
         if (ok != "OK")
         {
             throw new Exception("GW Accept Error: Client sent " + ok);
+            // TODO: crashing here makes the client stay in the world
+            //  to trigger, rename SniperCanvas's "var weaponRifleTransform = weaponsTransform.Find("WeaponOne");" to Find("WeaponWhatever")
         }
 
         bool udpConnected = false;
