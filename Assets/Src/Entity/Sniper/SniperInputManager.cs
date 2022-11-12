@@ -277,7 +277,7 @@ internal class SniperInputManager : BaseInputManager
                 Cast(CastUtils.MakeSniperWeaponRifleleAlternateAttack(uid_, transform.position, transform.rotation));
             else if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Shotgun && validator_.CanWeaponShotgunAlternate(currTime_ms))
             {
-                // not implemented
+                Cast(CastUtils.MakeSniperWeaponShotgunAlternateAttack(uid_, transform.position, transform.rotation));
             }
             else if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Medigun && validator_.CanWeaponMedigunAlternate(currTime_ms))
                 Cast(CastUtils.MakeSniperWeaponMedigunAlternateAttack(uid_));

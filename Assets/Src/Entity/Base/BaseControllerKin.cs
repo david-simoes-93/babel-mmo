@@ -511,6 +511,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
                 if (_internalVelocityAdd.sqrMagnitude > 0f)
                 {
                     currentVelocity += _internalVelocityAdd;
+                    Motor.ForceUnground();
                     _internalVelocityAdd = Vector3.zero;
                 }
                 break;

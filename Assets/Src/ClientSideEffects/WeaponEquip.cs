@@ -62,7 +62,6 @@ internal class WeaponEquip : ILocalEffect
     /// </summary>
     public void Destroy()
     {
-        GameDebug.Log("dtor!");
         Object.Destroy(myGameObject_);
     }
 

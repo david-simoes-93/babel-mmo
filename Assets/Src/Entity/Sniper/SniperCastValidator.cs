@@ -121,7 +121,10 @@ internal class SniperCastValidator : BaseCastValidator
     /// <returns>true if valid</returns>
     internal bool CanWeaponRifleFire(long currTime)
     {
-        return !parent_.IsDead && currTime > timeWeaponRifleCooldownEnded_ && currAmmoRifle_ > 0 && currentWeaponEquipped_ == Weapon.Rifle;
+        return !parent_.IsDead
+            && currTime > timeWeaponRifleCooldownEnded_
+            && currAmmoRifle_ >= weapon_configs[Weapon.Rifle].kLeftAmmoConsumed
+            && currentWeaponEquipped_ == Weapon.Rifle;
     }
 
     /// <summary>
@@ -142,7 +145,10 @@ internal class SniperCastValidator : BaseCastValidator
     /// <returns>true if valid</returns>
     internal bool CanWeaponShotgunFire(long currTime)
     {
-        return !parent_.IsDead && currTime > timeWeaponShotgunCooldownEnded_ && currAmmoShotgun_ > 0 && currentWeaponEquipped_ == Weapon.Shotgun;
+        return !parent_.IsDead
+            && currTime > timeWeaponShotgunCooldownEnded_
+            && currAmmoShotgun_ >= weapon_configs[Weapon.Shotgun].kLeftAmmoConsumed
+            && currentWeaponEquipped_ == Weapon.Shotgun;
     }
 
     /// <summary>
@@ -151,7 +157,10 @@ internal class SniperCastValidator : BaseCastValidator
     /// <returns>true if valid</returns>
     internal bool CanWeaponShotgunAlternate(long currTime)
     {
-        return !parent_.IsDead && currTime > timeWeaponShotgunCooldownEnded_ && currAmmoShotgun_ > 0 && currentWeaponEquipped_ == Weapon.Shotgun;
+        return !parent_.IsDead
+            && currTime > timeWeaponShotgunCooldownEnded_
+            && currAmmoShotgun_ >= weapon_configs[Weapon.Shotgun].kRightAmmoConsumed
+            && currentWeaponEquipped_ == Weapon.Shotgun;
     }
 
     /// <summary>
@@ -160,7 +169,10 @@ internal class SniperCastValidator : BaseCastValidator
     /// <returns>true if valid</returns>
     internal bool CanWeaponMedigunFire(long currTime)
     {
-        return !parent_.IsDead && currTime > timeWeaponMedigunCooldownEnded_ && currAmmoMedigun_ > 0 && currentWeaponEquipped_ == Weapon.Medigun;
+        return !parent_.IsDead
+            && currTime > timeWeaponMedigunCooldownEnded_
+            && currAmmoMedigun_ >= weapon_configs[Weapon.Medigun].kLeftAmmoConsumed
+            && currentWeaponEquipped_ == Weapon.Medigun;
     }
 
     /// <summary>
@@ -169,7 +181,10 @@ internal class SniperCastValidator : BaseCastValidator
     /// <returns>true if valid</returns>
     internal bool CanWeaponMedigunAlternate(long currTime)
     {
-        return !parent_.IsDead && currTime > timeWeaponMedigunCooldownEnded_ && currAmmoMedigun_ > 0 && currentWeaponEquipped_ == Weapon.Medigun;
+        return !parent_.IsDead
+            && currTime > timeWeaponMedigunCooldownEnded_
+            && currAmmoMedigun_ >= weapon_configs[Weapon.Medigun].kRightAmmoConsumed
+            && currentWeaponEquipped_ == Weapon.Medigun;
     }
 
     /// <summary>
@@ -268,7 +283,7 @@ internal class SniperCastValidator : BaseCastValidator
 
         currentWeaponEquipped_ = Weapon.Rifle;
 #if !UNITY_SERVER
-        // TODO: when someone else spanws, they need info about the current weapon, or they'll just see Rifle
+        // TODO: when someone else spawns, they need info about the current weapon, or they'll just see Rifle
         ShowWeapon(CastCode.SniperChooseWeaponRifle);
 #else
 #endif
@@ -352,8 +367,20 @@ internal class SniperCastValidator : BaseCastValidator
                 currAmmoRifle_ -= weapon_configs[Weapon.Rifle].kRightAmmoConsumed;
                 break;
             case CastCode.SniperWeaponShotgunAlternate:
-                // not implemented
-                // TODO move sniper backwards, spend 4 ammo, do single shot worth of dmg
+#if !UNITY_SERVER
+                if (parent_.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
+                {
+                    (double recoilH, double recoilV) = GetAttackLeftRecoil();
+                    sniperInputManager_.SetRecoil(recoilV * 10, recoilH * 10);
+                }
+                ClientAttackRightWeaponShotgun(rd as VectorCastRD);
+#else
+                ServerAttackRightWeaponShotgun(rd as VectorCastRD);
+#endif
+                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackRight);
+                timeWeaponShotgunCooldownStarted_ = currTime_ms;
+                timeWeaponShotgunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Shotgun].kRightCooldown;
+                currAmmoShotgun_ -= weapon_configs[Weapon.Shotgun].kRightAmmoConsumed;
                 break;
             case CastCode.SniperWeaponMedigunAlternate:
 #if !UNITY_SERVER
@@ -801,13 +828,21 @@ internal class SniperCastValidator : BaseCastValidator
     /// Client-side call. Sniper casts an WeaponShotgunAlternate with WeaponShotgun
     /// </summary>
     /// <param name="rd">the WeaponShotgunAlternate cast</param>
-    private void ClientAttackRightWeaponShotgun(VectorCastRD rd) { }
+    private void ClientAttackRightWeaponShotgun(VectorCastRD rd)
+    {
+        ClientAttackLeftWeaponShotgun(rd);
+        Vector3 backwards_force = parent_.CameraTransform().rotation * Vector3.forward * -20;
+        parent_.Controller.AddVelocity(backwards_force);
+    }
 
     /// <summary>
     /// Server-side call. Sniper casts an WeaponShotgunAlternate with WeaponShotgun
     /// </summary>
     /// <param name="rd">the WeaponShotgunAlternate cast</param>
-    private void ServerAttackRightWeaponShotgun(VectorCastRD rd) { }
+    private void ServerAttackRightWeaponShotgun(VectorCastRD rd)
+    {
+        ServerAttackLeftWeaponShotgun(rd);
+    }
 
     /// <summary>
     /// Client-side call. Sniper casts an WeaponMedigunFire with WeaponMedigun
