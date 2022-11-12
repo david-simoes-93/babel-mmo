@@ -82,11 +82,11 @@ internal class SniperCanvas : BaseCanvas
             weaponThree_.color = Color.gray;
         }
         weaponOne_.fillAmount = 1 - validator_.CooldownWeaponOne();
-        weaponOneAmmo_.text = validator_.currAmmoOne_.ToString() + "/" + SniperCastValidator.kWeaponOneMaxAmmo.ToString();
+        weaponOneAmmo_.text = validator_.currAmmoOne_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Rifle].kMaxAmmo.ToString();
         weaponTwo_.fillAmount = 1 - validator_.CooldownWeaponTwo();
-        weaponTwoAmmo_.text = validator_.currAmmoTwo_.ToString() + "/" + SniperCastValidator.kWeaponTwoMaxAmmo.ToString();
+        weaponTwoAmmo_.text = validator_.currAmmoTwo_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Shotgun].kMaxAmmo.ToString();
         weaponThree_.fillAmount = 1 - validator_.CooldownWeaponThree();
-        weaponThreeAmmo_.text = validator_.currAmmoThree_.ToString() + "/" + SniperCastValidator.kWeaponThreeMaxAmmo.ToString();
+        weaponThreeAmmo_.text = validator_.currAmmoThree_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Medigun].kMaxAmmo.ToString();
     }
 
     /// <summary>
