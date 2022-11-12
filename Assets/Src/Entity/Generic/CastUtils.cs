@@ -60,17 +60,17 @@ public class CastUtils : ScriptableObject
 
     static internal CastRD MakeChooseWeaponOne(int uid)
     {
-        return new CastRD(uid, Globals.CastCode.SniperChooseWeaponOne);
+        return new CastRD(uid, Globals.CastCode.SniperChooseWeaponRifle);
     }
 
     static internal CastRD MakeChooseWeaponTwo(int uid)
     {
-        return new CastRD(uid, Globals.CastCode.SniperChooseWeaponTwo);
+        return new CastRD(uid, Globals.CastCode.SniperChooseWeaponShotgun);
     }
 
     static internal CastRD MakeChooseWeaponThree(int uid)
     {
-        return new CastRD(uid, Globals.CastCode.SniperChooseWeaponThree);
+        return new CastRD(uid, Globals.CastCode.SniperChooseWeaponMedigun);
     }
 
     static internal CastRD MakeSuicideBomb(int uid)

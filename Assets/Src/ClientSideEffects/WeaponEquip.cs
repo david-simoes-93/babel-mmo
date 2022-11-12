@@ -27,21 +27,21 @@ internal class WeaponEquip : ILocalEffect
 
         switch (weapon)
         {
-            case Globals.CastCode.SniperChooseWeaponOne:
+            case Globals.CastCode.SniperChooseWeaponRifle:
                 myGameObject_ = Object.Instantiate(Globals.kSniperWeaponOne, parent_transform);
                 if (parent.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
                 {
                     myGameObject_.transform.localPosition = new Vector3(0.1f, -0.4f, 0.1f);
                 }
                 break;
-            case Globals.CastCode.SniperChooseWeaponTwo:
+            case Globals.CastCode.SniperChooseWeaponShotgun:
                 myGameObject_ = Object.Instantiate(Globals.kSniperWeaponTwo, parent_transform);
                 if (parent.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
                 {
                     myGameObject_.transform.localPosition = new Vector3(0.2f, -0.4f, 0.4f);
                 }
                 break;
-            case Globals.CastCode.SniperChooseWeaponThree:
+            case Globals.CastCode.SniperChooseWeaponMedigun:
                 myGameObject_ = Object.Instantiate(Globals.kSniperWeaponThree, parent_transform);
                 if (parent.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
                 {

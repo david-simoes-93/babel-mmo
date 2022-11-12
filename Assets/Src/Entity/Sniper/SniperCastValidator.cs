@@ -4,7 +4,32 @@ using static Globals;
 
 internal class SniperCastValidator : BaseCastValidator
 {
-    //private long timeOfLastAttackLeft_ = 0, timeOfLastAttackRight_ = 0;
+    internal class WeaponInfo
+    {
+        internal long timeCooldownStarted,
+            timeCooldownEnded;
+        internal int currAmmo;
+        internal bool reloading = false;
+    }
+
+    internal class WeaponConfig
+    {
+        internal int kLeftCooldown,
+            kLeftRange,
+            kLeftRadius,
+            kLeftDamage;
+        internal int kRightCooldown,
+            kRightRange,
+            kRightRadius,
+            kRightDamage;
+        internal int kReloadLength_ms;
+        internal int kMaxAmmo,
+            kLeftAmmoConsumed,
+            kRightAmmoConsumed;
+    }
+
+    // dictionary of Castcode-> Infos and Configs
+
     private long timeWeaponOneCooldownStarted_,
         timeWeaponOneCooldownEnded_,
         timeWeaponTwoCooldownStarted_,
@@ -18,7 +43,7 @@ internal class SniperCastValidator : BaseCastValidator
         reloadingTwo_ = false,
         reloadingThree_ = false;
     private int currentWeaponEquipped_ = 0;
-    private int curr_weapon_effect_uid_;
+    private int curr_weapon_effect_uid_ = 0;
 
     internal const int kWeaponOneLeftCooldown = 100,
         kWeaponOneLeftRange = 50,
@@ -72,9 +97,9 @@ internal class SniperCastValidator : BaseCastValidator
                 return CanWeaponThreeAlternate(currTime_ms);
             case CastCode.SniperReload:
                 return CanReload(currTime_ms);
-            case CastCode.SniperChooseWeaponOne:
-            case CastCode.SniperChooseWeaponTwo:
-            case CastCode.SniperChooseWeaponThree:
+            case CastCode.SniperChooseWeaponRifle:
+            case CastCode.SniperChooseWeaponShotgun:
+            case CastCode.SniperChooseWeaponMedigun:
                 return CanWeaponScroll(currTime_ms);
             default:
                 return false;
@@ -231,7 +256,8 @@ internal class SniperCastValidator : BaseCastValidator
 
         currentWeaponEquipped_ = 0;
 #if !UNITY_SERVER
-        curr_weapon_effect_uid_ = ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new WeaponEquip(parent_, CastCode.SniperChooseWeaponOne));
+        // TODO: when someone else spanws, they need info about the current weapon, or they'll just see w1
+        ShowWeapon(CastCode.SniperChooseWeaponRifle);
 #else
 #endif
     }
@@ -315,6 +341,7 @@ internal class SniperCastValidator : BaseCastValidator
                 break;
             case CastCode.SniperWeaponTwoAlternate:
                 // not implemented
+                // TODO move sniper backwards, spend 4 ammo, do single shot worth of dmg
                 break;
             case CastCode.SniperWeaponThreeAlternate:
 #if !UNITY_SERVER
@@ -329,14 +356,17 @@ internal class SniperCastValidator : BaseCastValidator
                 break;
             case CastCode.SniperReload:
                 parent_.SetAnimatorTrigger(EntityAnimationTrigger.kSniperReload);
-
+#if !UNITY_SERVER
+                HideCurrentWeapon();
+#else
+#endif
                 if (currentWeaponEquipped_ == 1)
                 {
                     reloadingTwo_ = true;
                     timeWeaponTwoCooldownStarted_ = currTime_ms;
                     timeWeaponTwoCooldownEnded_ = currTime_ms + kWeaponTwoReloadLength_ms;
                     currAmmoTwo_ = kWeaponTwoMaxAmmo;
-                    delayedEvents_.Add(currTime_ms + kWeaponTwoReloadLength_ms, rd);
+                    delayedEvents_.Add(timeWeaponTwoCooldownEnded_, rd);
                 }
                 else if (currentWeaponEquipped_ == 2)
                 {
@@ -344,7 +374,7 @@ internal class SniperCastValidator : BaseCastValidator
                     timeWeaponThreeCooldownStarted_ = currTime_ms;
                     timeWeaponThreeCooldownEnded_ = currTime_ms + kWeaponThreeReloadLength_ms;
                     currAmmoThree_ = kWeaponThreeMaxAmmo;
-                    delayedEvents_.Add(currTime_ms + kWeaponThreeReloadLength_ms, rd);
+                    delayedEvents_.Add(timeWeaponThreeCooldownEnded_, rd);
                 }
                 else
                 {
@@ -352,50 +382,80 @@ internal class SniperCastValidator : BaseCastValidator
                     timeWeaponOneCooldownStarted_ = currTime_ms;
                     timeWeaponOneCooldownEnded_ = currTime_ms + kWeaponOneReloadLength_ms;
                     currAmmoOne_ = kWeaponOneMaxAmmo;
-                    delayedEvents_.Add(currTime_ms + kWeaponOneReloadLength_ms, rd);
+                    delayedEvents_.Add(timeWeaponOneCooldownEnded_, rd);
                 }
                 break;
-            case CastCode.SniperChooseWeaponOne:
-#if !UNITY_SERVER
-                ClientWeaponEquip(rd as CastRD);
-#else
-#endif
+            case CastCode.SniperChooseWeaponRifle:
                 HalveWeaponOneCooldown();
-                DoubleWeaponTwoCooldown();
-                DoubleWeaponThreeCooldown();
+                if (currentWeaponEquipped_ == 1)
+                {
+                    DoubleWeaponTwoCooldown();
+                }
+                else if (currentWeaponEquipped_ == 2)
+                {
+                    DoubleWeaponThreeCooldown();
+                }
+                else
+                {
+                    GameDebug.LogWarning("Choosing Rifle, but current weapon is: " + currentWeaponEquipped_);
+                }
                 currentWeaponEquipped_ = 0;
                 if (reloadingOne_ && currTime_ms >= timeWeaponOneCooldownEnded_)
                 {
                     reloadingOne_ = false;
                 }
-                break;
-            case CastCode.SniperChooseWeaponTwo:
 #if !UNITY_SERVER
                 ClientWeaponEquip(rd as CastRD);
 #else
 #endif
-                DoubleWeaponOneCooldown();
+                break;
+            case CastCode.SniperChooseWeaponShotgun:
                 HalveWeaponTwoCooldown();
-                DoubleWeaponThreeCooldown();
+                if (currentWeaponEquipped_ == 0)
+                {
+                    DoubleWeaponOneCooldown();
+                }
+                else if (currentWeaponEquipped_ == 2)
+                {
+                    DoubleWeaponThreeCooldown();
+                }
+                else
+                {
+                    GameDebug.LogWarning("Choosing Shotgun, but current weapon is: " + currentWeaponEquipped_);
+                }
                 currentWeaponEquipped_ = 1;
                 if (reloadingTwo_ && currTime_ms >= timeWeaponTwoCooldownEnded_)
                 {
                     reloadingTwo_ = false;
                 }
-                break;
-            case CastCode.SniperChooseWeaponThree:
 #if !UNITY_SERVER
                 ClientWeaponEquip(rd as CastRD);
 #else
 #endif
-                DoubleWeaponOneCooldown();
-                DoubleWeaponTwoCooldown();
+                break;
+            case CastCode.SniperChooseWeaponMedigun:
                 HalveWeaponThreeCooldown();
+                if (currentWeaponEquipped_ == 0)
+                {
+                    DoubleWeaponOneCooldown();
+                }
+                else if (currentWeaponEquipped_ == 1)
+                {
+                    DoubleWeaponTwoCooldown();
+                }
+                else
+                {
+                    GameDebug.LogWarning("Choosing Medigun, but current weapon is: " + currentWeaponEquipped_);
+                }
                 currentWeaponEquipped_ = 2;
                 if (reloadingThree_ && currTime_ms >= timeWeaponThreeCooldownEnded_)
                 {
                     reloadingThree_ = false;
                 }
+#if !UNITY_SERVER
+                ClientWeaponEquip(rd as CastRD);
+#else
+#endif
                 break;
             default:
                 GameDebug.Log("Unknown cast: " + rd.type);
@@ -510,21 +570,51 @@ internal class SniperCastValidator : BaseCastValidator
 #endif
                 break;
             case CastCode.SniperReload:
+                // delayed SniperReload acts as a ping when a reload finishes. However, because reload times can slow down
+                //  when you switch to different weapons, we check the time again and re-issue another delayed SniperReload
+                //  until it's actually correct
                 if (currentWeaponEquipped_ == 0 && reloadingOne_)
                 {
+                    if (currTime_ms < timeWeaponOneCooldownEnded_)
+                    {
+                        delayedEvents_.Add(timeWeaponOneCooldownEnded_, rd);
+                        break;
+                    }
                     reloadingOne_ = false;
+#if !UNITY_SERVER
+                    ShowWeapon(CastCode.SniperChooseWeaponRifle);
+#else
+#endif
                 }
                 else if (currentWeaponEquipped_ == 1 && reloadingTwo_)
                 {
+                    if (currTime_ms < timeWeaponTwoCooldownEnded_)
+                    {
+                        delayedEvents_.Add(timeWeaponTwoCooldownEnded_, rd);
+                        break;
+                    }
                     reloadingTwo_ = false;
+#if !UNITY_SERVER
+                    ShowWeapon(CastCode.SniperChooseWeaponShotgun);
+#else
+#endif
                 }
                 else if (currentWeaponEquipped_ == 2 && reloadingThree_)
                 {
+                    if (currTime_ms < timeWeaponThreeCooldownEnded_)
+                    {
+                        delayedEvents_.Add(timeWeaponThreeCooldownEnded_, rd);
+                        break;
+                    }
                     reloadingThree_ = false;
+#if !UNITY_SERVER
+                    ShowWeapon(CastCode.SniperChooseWeaponMedigun);
+#else
+#endif
                 }
                 break;
             default:
-                GameDebug.Log("Unknown cast: " + rd.type);
+                GameDebug.LogWarning("Unknown cast: " + rd.type);
                 return false;
         }
 
@@ -760,7 +850,30 @@ internal class SniperCastValidator : BaseCastValidator
     /// <param name="rd">the WeaponThreeFire cast</param>
     private void ClientWeaponEquip(CastRD rd)
     {
+        HideCurrentWeapon();
+
+        if (
+            (rd.type == Globals.CastCode.SniperChooseWeaponRifle && !reloadingOne_)
+            || (rd.type == Globals.CastCode.SniperChooseWeaponShotgun && !reloadingTwo_)
+            || (rd.type == Globals.CastCode.SniperChooseWeaponMedigun && !reloadingThree_)
+        )
+        {
+            ShowWeapon(rd.type);
+        }
+    }
+
+    private void HideCurrentWeapon()
+    {
+        if (curr_weapon_effect_uid_ == 0)
+        {
+            return;
+        }
         ClientGameLoop.CGL.LocalEntityManager.Remove(curr_weapon_effect_uid_);
-        curr_weapon_effect_uid_ = ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new WeaponEquip(parent_, rd.type));
+        curr_weapon_effect_uid_ = 0;
+    }
+
+    private void ShowWeapon(CastCode type)
+    {
+        curr_weapon_effect_uid_ = ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new WeaponEquip(parent_, type));
     }
 }
