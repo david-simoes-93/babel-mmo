@@ -200,7 +200,7 @@ internal class MageControllerKin : BaseControllerKin
 #else
                     ServerStopCast(toState);
 #endif
-                    parent_.SetAnimatorTrigger(Globals.EntityAnimationTrigger.kMageChannelFailed);
+                    parent_.UnitAnimator.SetAnimatorTrigger(Globals.EntityAnimationTrigger.kMageChannelFailed);
                 }
                 break;
             }

@@ -90,17 +90,17 @@ internal class MonsterCastValidator : BaseCastValidator
         switch (rd.type)
         {
             case CastCode.MonsterAttackLeft:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackLeft);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackLeft);
                 delayedEvents_.Add(currTime_ms + 200, rd);
                 timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeftCooldown;
                 break;
             case CastCode.MonsterAttackRight:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackRight);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackRight);
                 delayedEvents_.Add(currTime_ms + 200, rd);
                 timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackRightCooldown;
                 break;
             case CastCode.MonsterRangedAttack:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackLeft);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackLeft);
                 delayedEvents_.Add(currTime_ms + 200, rd);
                 timeWhenLastAttackCooldownEnded_ = currTime_ms + kRangedAttackCooldown;
                 break;
@@ -108,14 +108,14 @@ internal class MonsterCastValidator : BaseCastValidator
                 delayedEvents_.Add(currTime_ms, rd);
                 break;
             case CastCode.ValkyrieStunCarry:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackRight);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackRight);
                 delayedEvents_.Add(currTime_ms, rd);
                 break;
             case CastCode.ValkyrieDropCarried:
                 delayedEvents_.Add(currTime_ms, rd);
                 break;
             case CastCode.FreyjaPoisonZone:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackRight);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kNpcAttackRight);
                 break;
             case CastCode.ThorSlam:
                 // Animations don't always start IMMEDIATELY, so we instead have the character jump
@@ -123,11 +123,11 @@ internal class MonsterCastValidator : BaseCastValidator
                 delayedEvents_.Add(currTime_ms + 600, rd);
                 break;
             case CastCode.ThorChainLightning:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kThorChainLightning);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kThorChainLightning);
                 delayedEvents_.Add(currTime_ms + 400, rd);
                 break;
             case CastCode.LokiSplitStart:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kLokiSplitStart);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kLokiSplitStart);
                 parent_.SetTargetable(false);
                 parent_.SetInvulnerable(true);
                 // TODO clear all debuffs

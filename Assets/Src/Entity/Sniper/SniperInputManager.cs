@@ -45,7 +45,6 @@ internal class SniperInputManager : BaseInputManager
         validator_ = (SniperCastValidator)parent.Validator;
         baseValidator_ = validator_;
         uid_ = parent.Uid;
-        animator_ = parent.Animator;
     }
 
     /// <summary>
@@ -236,23 +235,23 @@ internal class SniperInputManager : BaseInputManager
 
         if (moveFront_)
         {
-            parent_.SetAnimatorState(EntityAnimation.kWalkForward);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkForward);
         }
         else if (moveLeft_)
         {
-            parent_.SetAnimatorState(EntityAnimation.kWalkLeft);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkLeft);
         }
         else if (moveRight_)
         {
-            parent_.SetAnimatorState(EntityAnimation.kWalkRight);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkRight);
         }
         else if (moveBack_)
         {
-            parent_.SetAnimatorState(EntityAnimation.kWalkBack);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkBack);
         }
         else
         {
-            parent_.SetAnimatorState(EntityAnimation.kIdle);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kIdle);
         }
 
         // check ammo and attack/reload

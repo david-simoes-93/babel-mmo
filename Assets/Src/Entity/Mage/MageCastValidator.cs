@@ -85,19 +85,19 @@ internal class MageCastValidator : BaseCastValidator
         switch (cd)
         {
             case CastCode.MageFireflash:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kMageFireflash);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kMageFireflash);
                 delayedEvents_.Add(currTime_ms + 0, rd);
 
                 timeOfLastAttack_ = currTime_ms;
                 break;
             case CastCode.MageFrostflash:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kMageFrostflash);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kMageFrostflash);
                 delayedEvents_.Add(currTime_ms + 0, rd);
 
                 timeOfLastAttack_ = currTime_ms;
                 break;
             case CastCode.MageArcaneflash:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kMageArcaneflash);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kMageArcaneflash);
                 delayedEvents_.Add(currTime_ms + 0, rd);
 
                 timeOfLastAttack_ = currTime_ms;
@@ -120,7 +120,7 @@ internal class MageCastValidator : BaseCastValidator
                 break;
             case CastCode.MagePyroblastEnd:
             case CastCode.MageRenewEnd:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kMageChannelEnd);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kMageChannelEnd);
                 channelingSpell = CastCode.None;
                 controller_.TransitionToState(CharacterState.Default);
                 break;

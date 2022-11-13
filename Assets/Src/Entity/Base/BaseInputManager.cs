@@ -13,7 +13,6 @@ internal abstract class BaseInputManager : MonoBehaviour
     protected PlayerCharacterInputs kNoopCharacterInputs = new PlayerCharacterInputs { };
 
     protected UnitEntity parent_;
-    protected Animator animator_;
     protected int uid_;
     protected bool wasAlive_ = false;
     protected BaseCastValidator baseValidator_;

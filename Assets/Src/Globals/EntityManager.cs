@@ -200,7 +200,7 @@ internal class EntityManager
 
             BaseControllerKin controller = tempUnitEntities[kvp.Key].Controller;
             controller.SetMotorPose(kvp.Value.position, kvp.Value.speed, kvp.Value.ori);
-            tempUnitEntities[kvp.Key].SetAnimatorState(kvp.Value.state);
+            tempUnitEntities[kvp.Key].UnitAnimator.SetAnimatorState(kvp.Value.state);
         }
     }
 

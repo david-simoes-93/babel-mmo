@@ -14,10 +14,8 @@ internal class UnitEntity : Entity
     internal BaseCastValidator Validator { get; private set; }
     internal BaseControllerKin Controller { get; private set; }
     internal BaseInputManager InputManager { get; private set; }
-    internal Animator Animator { get; private set; }
+    internal BaseAnimator UnitAnimator { get; private set; }
 
-    internal EntityAnimation CurrentAnimatorState { get; private set; }
-    private Dictionary<EntityAnimation, string> localAnimationStrings_;
     internal int Health { get; private set; }
     internal int MaxHealth { get; private set; }
     internal bool IsDead { get; private set; } // mostly used internally (IsDead implies !IsAttackable)
@@ -45,7 +43,6 @@ internal class UnitEntity : Entity
     {
         Type = type;
         Uid = uid;
-        CurrentAnimatorState = EntityAnimation.kIdle;
         current_buffs_ = new Dictionary<BuffEntityCode, int>();
     }
 
@@ -101,7 +98,7 @@ internal class UnitEntity : Entity
         {
             IsDead = true;
             IsAttackable = false;
-            SetAnimatorTrigger(EntityAnimationTrigger.kDeath);
+            UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kDeath);
         }
         else if (Health > 0 && IsDead)
         {
@@ -110,70 +107,6 @@ internal class UnitEntity : Entity
         }
 
         SetProperCharacterState();
-    }
-
-    /// <summary>
-    /// Triggers animator with given animation
-    /// </summary>
-    /// <param name="trig"></param>
-    internal void SetAnimatorTrigger(EntityAnimationTrigger trig)
-    {
-#if !UNITY_SERVER
-        GameDebug.Log("setting trigger " + trig);
-        Animator.SetTrigger(AnimationTriggerStrings[trig]);
-#endif
-    }
-
-    /// <summary>
-    /// iterates over animations[], setting everything to false except given 'state'.
-    /// this also check controller states (which have priority over movement animations) and uses those as adequate
-    /// this sets currentAnimatorState, which will be propagated through the network
-    /// </summary>
-    /// <param name="state"></param>
-    internal void SetAnimatorState(EntityAnimation state)
-    {
-        EntityAnimation newAnimatorState;
-
-        // check priority Controller states (running, stunned, crouching) and sets them
-        CharacterState cState = Controller.CurrentCharacterState;
-        if (cState == CharacterState.FighterCharging)
-        {
-            newAnimatorState = EntityAnimation.kRun;
-        }
-        else if (cState == CharacterState.SniperCrouching)
-        {
-            // TODO sniper crouched movement
-            newAnimatorState = EntityAnimation.kCrouch;
-        }
-        else if (cState == CharacterState.MageChanneling)
-        {
-            newAnimatorState = EntityAnimation.kMageChanneling;
-        }
-        else
-        {
-            newAnimatorState = state;
-        }
-
-        if (newAnimatorState != CurrentAnimatorState)
-        {
-            GameDebug.Log("setting state " + newAnimatorState);
-            CurrentAnimatorState = newAnimatorState;
-            UpdateAnimator();
-        }
-    }
-
-    /// <summary>
-    /// Disables all Animator states except for CurrentAnimatorState
-    /// </summary>
-    private void UpdateAnimator()
-    {
-#if !UNITY_SERVER
-        foreach (KeyValuePair<EntityAnimation, string> entry in localAnimationStrings_)
-        {
-            Animator.SetBool(entry.Value, false);
-        }
-        Animator.SetBool(localAnimationStrings_[CurrentAnimatorState], true);
-#endif
     }
 
     /// <summary>
@@ -193,33 +126,34 @@ internal class UnitEntity : Entity
         // spawn unit with LC, controller, and validator
         GameObject = UnityEngine.Object.Instantiate(UnitEntityCodes[Type], pos, ori);
         Controller = GameObject.GetComponent<BaseControllerKin>();
-        Animator = GameObject.GetComponentInChildren<Animator>();
+
         // TODO map
         if (Type == UnitEntityCode.kFighter)
         {
             Validator = new FighterCastValidator();
-            localAnimationStrings_ = AnimationStrings;
+            UnitAnimator = new FighterAnimator();
         }
         else if (Type == UnitEntityCode.kSniper)
         {
             Validator = new SniperCastValidator();
-            localAnimationStrings_ = AnimationStrings;
+            UnitAnimator = new SniperAnimator();
         }
         else if (Type == UnitEntityCode.kMage)
         {
             Validator = new MageCastValidator();
-            localAnimationStrings_ = MageAnimationStrings;
+            UnitAnimator = new MageAnimator();
         }
         else
         {
             // npc
             Validator = new MonsterCastValidator();
-            localAnimationStrings_ = AnimationStrings;
+            UnitAnimator = new MonsterAnimator();
         }
 
         // config is last, after all objects have been defined
         Controller.Config(this);
         Validator.Config(this);
+        UnitAnimator.Config(this);
 
         Name = entityName;
         IsStunned = false;

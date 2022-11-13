@@ -309,7 +309,7 @@ internal class SniperCastValidator : BaseCastValidator
 #else
                 ServerAttackLeftWeaponRifle(rd as VectorCastRD);
 #endif
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackLeft);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackLeft);
                 timeWeaponRifleCooldownStarted_ = currTime_ms;
                 timeWeaponRifleCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Rifle].kLeftCooldown;
                 currAmmoRifle_ -= weapon_configs[Weapon.Rifle].kLeftAmmoConsumed;
@@ -325,7 +325,7 @@ internal class SniperCastValidator : BaseCastValidator
 #else
                 ServerAttackLeftWeaponShotgun(rd as VectorCastRD);
 #endif
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackLeft);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackLeft);
                 timeWeaponShotgunCooldownStarted_ = currTime_ms;
                 timeWeaponShotgunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Shotgun].kLeftCooldown;
                 currAmmoShotgun_ -= weapon_configs[Weapon.Shotgun].kLeftAmmoConsumed;
@@ -341,7 +341,7 @@ internal class SniperCastValidator : BaseCastValidator
 #else
                 ServerAttackLeftWeaponMedigun(rd as VectorCastRD);
 #endif
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackLeft);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackLeft);
                 timeWeaponMedigunCooldownStarted_ = currTime_ms;
                 timeWeaponMedigunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Medigun].kLeftCooldown;
                 currAmmoMedigun_ -= weapon_configs[Weapon.Medigun].kLeftAmmoConsumed;
@@ -356,7 +356,7 @@ internal class SniperCastValidator : BaseCastValidator
 #else
                     
 #endif
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackRight);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackRight);
                 // TODO if the attack is delayed, it will still use the original position and orientation when it was cast.
                 // to fix, we need to recheck those values when the attack is actually executed
                 // should add some delay, like 500ms (charging)
@@ -377,7 +377,7 @@ internal class SniperCastValidator : BaseCastValidator
 #else
                 ServerAttackRightWeaponShotgun(rd as VectorCastRD);
 #endif
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackRight);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackRight);
                 timeWeaponShotgunCooldownStarted_ = currTime_ms;
                 timeWeaponShotgunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Shotgun].kRightCooldown;
                 currAmmoShotgun_ -= weapon_configs[Weapon.Shotgun].kRightAmmoConsumed;
@@ -388,13 +388,13 @@ internal class SniperCastValidator : BaseCastValidator
 #else
                 ServerAttackRightWeaponMedigun(rd);
 #endif
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackRight);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackRight);
                 timeWeaponMedigunCooldownStarted_ = currTime_ms;
                 timeWeaponMedigunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Medigun].kRightCooldown;
                 currAmmoMedigun_ -= weapon_configs[Weapon.Medigun].kRightAmmoConsumed;
                 break;
             case CastCode.SniperReload:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kSniperReload);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperReload);
 #if !UNITY_SERVER
                 HideCurrentWeapon();
 #else

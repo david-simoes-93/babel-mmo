@@ -139,7 +139,7 @@ internal class NetworkServer
                 transf.position,
                 controller.GetMotorSpeed(),
                 transf.rotation,
-                unit.CurrentAnimatorState,
+                unit.UnitAnimator.CurrentAnimatorState,
                 unit.LastEventId
             );
             //GameDebug.Log("urd=" + urd);
