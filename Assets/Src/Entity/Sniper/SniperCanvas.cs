@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static Globals;
 
 internal class SniperCanvas : BaseCanvas
 {
@@ -63,13 +64,13 @@ internal class SniperCanvas : BaseCanvas
         UpdateCombatText(currDmgMessagesLeft_);
         UpdateCombatText(currDmgMessagesRight_);
 
-        if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Shotgun)
+        if (validator_.CurrentWeapon() == CastCode.SniperChooseWeaponShotgun)
         {
             weaponRifle_.color = Color.gray;
             weaponShotgun_.color = Color.white;
             weaponMedigun_.color = Color.gray;
         }
-        else if (validator_.CurrentWeapon() == SniperCastValidator.Weapon.Medigun)
+        else if (validator_.CurrentWeapon() == CastCode.SniperChooseWeaponMedigun)
         {
             weaponRifle_.color = Color.gray;
             weaponShotgun_.color = Color.gray;
@@ -82,13 +83,13 @@ internal class SniperCanvas : BaseCanvas
             weaponMedigun_.color = Color.gray;
         }
         weaponRifle_.fillAmount = 1 - validator_.CooldownWeaponRifle();
-        weaponRifleAmmo_.text = validator_.currAmmoRifle_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Rifle].kMaxAmmo.ToString();
+        weaponRifleAmmo_.text = validator_.currAmmoRifle_.ToString() + "/" + SniperCastValidator.weapon_configs[CastCode.SniperChooseWeaponRifle].kMaxAmmo.ToString();
         weaponShotgun_.fillAmount = 1 - validator_.CooldownWeaponShotgun();
         weaponShotgunAmmo_.text =
-            validator_.currAmmoShotgun_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Shotgun].kMaxAmmo.ToString();
+            validator_.currAmmoShotgun_.ToString() + "/" + SniperCastValidator.weapon_configs[CastCode.SniperChooseWeaponShotgun].kMaxAmmo.ToString();
         weaponMedigun_.fillAmount = 1 - validator_.CooldownWeaponMedigun();
         weaponMedigunAmmo_.text =
-            validator_.currAmmoMedigun_.ToString() + "/" + SniperCastValidator.weapon_configs[SniperCastValidator.Weapon.Medigun].kMaxAmmo.ToString();
+            validator_.currAmmoMedigun_.ToString() + "/" + SniperCastValidator.weapon_configs[CastCode.SniperChooseWeaponMedigun].kMaxAmmo.ToString();
     }
 
     /// <summary>
@@ -174,7 +175,7 @@ internal class SniperCanvas : BaseCanvas
         CrossHair_.SetActive(false);
         if (deathPanel_ == null)
         {
-            deathPanel_ = Instantiate(Globals.kDeathPanelPrefab);
+            deathPanel_ = Instantiate(kDeathPanelPrefab);
             deathPanel_.transform.SetParent(AlertAnchor_.transform);
             deathPanel_.transform.localPosition = Vector3.zero;
         }
@@ -197,14 +198,14 @@ internal class SniperCanvas : BaseCanvas
 
             if (currDmgMessagesRight_.Count > 0 && currDmgMessagesRight_[0].remote_entity_.Uid == source.Uid && currDmgMessagesRight_[0].cast_ == rd.effect_source_type)
             {
-                currDmgMessagesRight_[0].UpdateDamage(rd.value, Globals.IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow);
+                currDmgMessagesRight_[0].UpdateDamage(rd.value, IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow);
             }
             else
             {
                 CombatText2D cmbtText = new CombatText2D(
                     source,
                     rd.value,
-                    Globals.IsHealingSpell(rd.effect_source_type) ? Color.green : Color.red,
+                    IsHealingSpell(rd.effect_source_type) ? Color.green : Color.red,
                     CombatDamageRight_.transform,
                     rd.effect_source_type
                 );
@@ -217,7 +218,7 @@ internal class SniperCanvas : BaseCanvas
             damageIndicatorFrameCounter_ = 0;
 
             // If WeaponRifleAlternate's explosion
-            if (rd.effect_source_type == Globals.CastCode.SniperWeaponRifleAlternate)
+            if (rd.effect_source_type == CastCode.SniperWeaponRifleAlternate)
             {
                 FloatingText3D cmbtText = new FloatingText3D(target.TargetingTransform.position, rd.value.ToString(), 1000, Color.yellow);
                 ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(cmbtText);
@@ -225,14 +226,14 @@ internal class SniperCanvas : BaseCanvas
 
             if (currDmgMessagesLeft_.Count > 0 && currDmgMessagesLeft_[0].remote_entity_.Uid == target.Uid && currDmgMessagesLeft_[0].cast_ == rd.effect_source_type)
             {
-                currDmgMessagesLeft_[0].UpdateDamage(rd.value, Globals.IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow);
+                currDmgMessagesLeft_[0].UpdateDamage(rd.value, IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow);
             }
             else
             {
                 CombatText2D cmbtText = new CombatText2D(
                     target,
                     rd.value,
-                    Globals.IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow,
+                    IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow,
                     CombatDamageLeft_.transform,
                     rd.effect_source_type
                 );

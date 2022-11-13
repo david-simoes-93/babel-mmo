@@ -58,7 +58,7 @@ public class CastUtils : ScriptableObject
         return new CastRD(uid, Globals.CastCode.SniperReload);
     }
 
-    static internal CastRD MakeChooseWeaponRiflele(int uid)
+    static internal CastRD MakeChooseWeaponRifle(int uid)
     {
         return new CastRD(uid, Globals.CastCode.SniperChooseWeaponRifle);
     }

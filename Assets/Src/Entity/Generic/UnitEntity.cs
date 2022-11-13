@@ -94,19 +94,7 @@ internal class UnitEntity : Entity
     /// </summary>
     private void CheckHealth()
     {
-        if (Health <= 0 && !IsDead)
-        {
-            IsDead = true;
-            IsAttackable = false;
-            UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kDeath);
-        }
-        else if (Health > 0 && IsDead)
-        {
-            IsDead = false;
-            IsAttackable = true;
-        }
-
-        SetProperCharacterState();
+        SetDead(Health <= 0);
     }
 
     /// <summary>
@@ -252,6 +240,46 @@ internal class UnitEntity : Entity
     internal bool Exists()
     {
         return GameObject != null;
+    }
+
+    /// <summary>
+    /// Sets the entity's dead status
+    /// </summary>
+    /// <param name="dead">dead status</param>
+    internal void SetDead(bool dead)
+    {
+        if (IsDead == dead)
+        {
+            return;
+        }
+
+        IsDead = dead;
+        IsAttackable = !dead;
+
+        if (IsDead)
+        {
+            UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kDeath);
+#if !UNITY_SERVER
+            if (Type == UnitEntityCode.kSniper)
+            {
+                (Validator as SniperCastValidator).ClientHideCurrentWeapon();
+            }
+#else
+#endif
+        }
+        else
+        {
+#if !UNITY_SERVER
+            if (Type == UnitEntityCode.kSniper)
+            {
+                SniperCastValidator sVal = Validator as SniperCastValidator;
+                sVal.ClientShowWeapon(sVal.CurrentWeapon());
+            }
+#else
+#endif
+        }
+
+        SetProperCharacterState();
     }
 
     /// <summary>

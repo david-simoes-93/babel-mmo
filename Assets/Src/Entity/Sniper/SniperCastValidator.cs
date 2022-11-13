@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using static Globals;
+using static Globals.CastCode;
 
 internal class SniperCastValidator : BaseCastValidator
 {
@@ -11,6 +12,8 @@ internal class SniperCastValidator : BaseCastValidator
             timeCooldownEnded;
         internal int currAmmo;
         internal bool reloading = false;
+
+        internal readonly WeaponConfig config;
     }
 
     internal class WeaponConfig
@@ -47,22 +50,14 @@ internal class SniperCastValidator : BaseCastValidator
             kRightAmmoConsumed;
     }
 
-    // TODO: eventually move this out of CastValidator and into some Sniper global file
-    public enum Weapon
+    public readonly static Dictionary<CastCode, WeaponConfig> weapon_configs = new Dictionary<CastCode, WeaponConfig>
     {
-        Rifle,
-        Shotgun,
-        Medigun
+        { SniperChooseWeaponRifle, new WeaponConfig(100, 50, 0, 5, 1000, 20, 6, 15, 1000, 30, 1, 10) },
+        { SniperChooseWeaponShotgun, new WeaponConfig(500, 20, 0, 2, 5000, 20, 0, 2, 1500, 8, 1, 4) },
+        { SniperChooseWeaponMedigun, new WeaponConfig(100, 50, 0, 3, 100, 0, 0, 2, 1000, 20, 1, 1) }
     };
 
-    public readonly static Dictionary<Weapon, WeaponConfig> weapon_configs = new Dictionary<Weapon, WeaponConfig>
-    {
-        { Weapon.Rifle, new WeaponConfig(100, 50, 0, 5, 1000, 20, 6, 15, 1000, 30, 1, 10) },
-        { Weapon.Shotgun, new WeaponConfig(500, 20, 0, 2, 5000, 20, 0, 2, 1500, 8, 1, 4) },
-        { Weapon.Medigun, new WeaponConfig(100, 50, 0, 3, 100, 0, 0, 2, 1000, 20, 1, 1) }
-    };
-
-    // dictionary of Castcode-> Infos and Configs
+    // TODO: dictionary of Castcode-> Infos
 
     private long timeWeaponRifleCooldownStarted_,
         timeWeaponRifleCooldownEnded_,
@@ -76,7 +71,7 @@ internal class SniperCastValidator : BaseCastValidator
     private bool reloadingRifle_ = false,
         reloadingShotgun_ = false,
         reloadingMedigun_ = false;
-    private Weapon currentWeaponEquipped_ = Weapon.Rifle;
+    private CastCode currentWeaponEquipped_ = SniperChooseWeaponRifle;
     private int curr_weapon_effect_uid_ = 0;
 
     private SniperCanvas sniperGui_;
@@ -92,23 +87,23 @@ internal class SniperCastValidator : BaseCastValidator
     {
         switch (rd.type)
         {
-            case CastCode.SniperWeaponRifleFire:
+            case SniperWeaponRifleFire:
                 return CanWeaponRifleFire(currTime_ms);
-            case CastCode.SniperWeaponRifleAlternate:
+            case SniperWeaponRifleAlternate:
                 return CanWeaponRifleAlternate(currTime_ms);
-            case CastCode.SniperWeaponShotgunFire:
+            case SniperWeaponShotgunFire:
                 return CanWeaponShotgunFire(currTime_ms);
-            case CastCode.SniperWeaponShotgunAlternate:
+            case SniperWeaponShotgunAlternate:
                 return CanWeaponShotgunAlternate(currTime_ms);
-            case CastCode.SniperWeaponMedigunFire:
+            case SniperWeaponMedigunFire:
                 return CanWeaponMedigunFire(currTime_ms);
-            case CastCode.SniperWeaponMedigunAlternate:
+            case SniperWeaponMedigunAlternate:
                 return CanWeaponMedigunAlternate(currTime_ms);
-            case CastCode.SniperReload:
+            case SniperReload:
                 return CanReload(currTime_ms);
-            case CastCode.SniperChooseWeaponRifle:
-            case CastCode.SniperChooseWeaponShotgun:
-            case CastCode.SniperChooseWeaponMedigun:
+            case SniperChooseWeaponRifle:
+            case SniperChooseWeaponShotgun:
+            case SniperChooseWeaponMedigun:
                 return CanWeaponScroll(currTime_ms);
             default:
                 return false;
@@ -123,8 +118,8 @@ internal class SniperCastValidator : BaseCastValidator
     {
         return !parent_.IsDead
             && currTime > timeWeaponRifleCooldownEnded_
-            && currAmmoRifle_ >= weapon_configs[Weapon.Rifle].kLeftAmmoConsumed
-            && currentWeaponEquipped_ == Weapon.Rifle;
+            && currAmmoRifle_ >= weapon_configs[SniperChooseWeaponRifle].kLeftAmmoConsumed
+            && currentWeaponEquipped_ == SniperChooseWeaponRifle;
     }
 
     /// <summary>
@@ -135,8 +130,8 @@ internal class SniperCastValidator : BaseCastValidator
     {
         return !parent_.IsDead
             && currTime > timeWeaponRifleCooldownEnded_
-            && currAmmoRifle_ >= weapon_configs[Weapon.Rifle].kRightAmmoConsumed
-            && currentWeaponEquipped_ == Weapon.Rifle;
+            && currAmmoRifle_ >= weapon_configs[SniperChooseWeaponRifle].kRightAmmoConsumed
+            && currentWeaponEquipped_ == SniperChooseWeaponRifle;
     }
 
     /// <summary>
@@ -147,8 +142,8 @@ internal class SniperCastValidator : BaseCastValidator
     {
         return !parent_.IsDead
             && currTime > timeWeaponShotgunCooldownEnded_
-            && currAmmoShotgun_ >= weapon_configs[Weapon.Shotgun].kLeftAmmoConsumed
-            && currentWeaponEquipped_ == Weapon.Shotgun;
+            && currAmmoShotgun_ >= weapon_configs[SniperChooseWeaponShotgun].kLeftAmmoConsumed
+            && currentWeaponEquipped_ == SniperChooseWeaponShotgun;
     }
 
     /// <summary>
@@ -159,8 +154,8 @@ internal class SniperCastValidator : BaseCastValidator
     {
         return !parent_.IsDead
             && currTime > timeWeaponShotgunCooldownEnded_
-            && currAmmoShotgun_ >= weapon_configs[Weapon.Shotgun].kRightAmmoConsumed
-            && currentWeaponEquipped_ == Weapon.Shotgun;
+            && currAmmoShotgun_ >= weapon_configs[SniperChooseWeaponShotgun].kRightAmmoConsumed
+            && currentWeaponEquipped_ == SniperChooseWeaponShotgun;
     }
 
     /// <summary>
@@ -171,8 +166,8 @@ internal class SniperCastValidator : BaseCastValidator
     {
         return !parent_.IsDead
             && currTime > timeWeaponMedigunCooldownEnded_
-            && currAmmoMedigun_ >= weapon_configs[Weapon.Medigun].kLeftAmmoConsumed
-            && currentWeaponEquipped_ == Weapon.Medigun;
+            && currAmmoMedigun_ >= weapon_configs[SniperChooseWeaponMedigun].kLeftAmmoConsumed
+            && currentWeaponEquipped_ == SniperChooseWeaponMedigun;
     }
 
     /// <summary>
@@ -183,8 +178,8 @@ internal class SniperCastValidator : BaseCastValidator
     {
         return !parent_.IsDead
             && currTime > timeWeaponMedigunCooldownEnded_
-            && currAmmoMedigun_ >= weapon_configs[Weapon.Medigun].kRightAmmoConsumed
-            && currentWeaponEquipped_ == Weapon.Medigun;
+            && currAmmoMedigun_ >= weapon_configs[SniperChooseWeaponMedigun].kRightAmmoConsumed
+            && currentWeaponEquipped_ == SniperChooseWeaponMedigun;
     }
 
     /// <summary>
@@ -193,17 +188,17 @@ internal class SniperCastValidator : BaseCastValidator
     /// <returns>true if valid</returns>
     internal bool CanReload(long currTime)
     {
-        if (currentWeaponEquipped_ == Weapon.Shotgun)
+        if (currentWeaponEquipped_ == SniperChooseWeaponShotgun)
         {
-            return !parent_.IsDead && currTime > timeWeaponShotgunCooldownEnded_ && currAmmoShotgun_ < weapon_configs[Weapon.Shotgun].kMaxAmmo;
+            return !parent_.IsDead && currTime > timeWeaponShotgunCooldownEnded_ && currAmmoShotgun_ < weapon_configs[SniperChooseWeaponShotgun].kMaxAmmo;
         }
-        else if (currentWeaponEquipped_ == Weapon.Medigun)
+        else if (currentWeaponEquipped_ == SniperChooseWeaponMedigun)
         {
-            return !parent_.IsDead && currTime > timeWeaponMedigunCooldownEnded_ && currAmmoMedigun_ < weapon_configs[Weapon.Medigun].kMaxAmmo;
+            return !parent_.IsDead && currTime > timeWeaponMedigunCooldownEnded_ && currAmmoMedigun_ < weapon_configs[SniperChooseWeaponMedigun].kMaxAmmo;
         }
         else
         {
-            return !parent_.IsDead && currTime > timeWeaponRifleCooldownEnded_ && currAmmoRifle_ < weapon_configs[Weapon.Rifle].kMaxAmmo;
+            return !parent_.IsDead && currTime > timeWeaponRifleCooldownEnded_ && currAmmoRifle_ < weapon_configs[SniperChooseWeaponRifle].kMaxAmmo;
         }
     }
 
@@ -218,11 +213,11 @@ internal class SniperCastValidator : BaseCastValidator
 
     internal bool HasAmmo()
     {
-        if (currentWeaponEquipped_ == Weapon.Shotgun)
+        if (currentWeaponEquipped_ == SniperChooseWeaponShotgun)
         {
             return currAmmoShotgun_ != 0;
         }
-        else if (currentWeaponEquipped_ == Weapon.Medigun)
+        else if (currentWeaponEquipped_ == SniperChooseWeaponMedigun)
         {
             return currAmmoMedigun_ != 0;
         }
@@ -232,7 +227,7 @@ internal class SniperCastValidator : BaseCastValidator
         }
     }
 
-    internal Weapon CurrentWeapon()
+    internal CastCode CurrentWeapon()
     {
         return currentWeaponEquipped_;
     }
@@ -269,9 +264,9 @@ internal class SniperCastValidator : BaseCastValidator
     {
         sniperGui_ = (SniperCanvas)parent.Canvas;
         sniperInputManager_ = (SniperInputManager)parent.InputManager;
-        currAmmoRifle_ = weapon_configs[Weapon.Rifle].kMaxAmmo;
-        currAmmoShotgun_ = weapon_configs[Weapon.Shotgun].kMaxAmmo;
-        currAmmoMedigun_ = weapon_configs[Weapon.Medigun].kMaxAmmo;
+        currAmmoRifle_ = weapon_configs[SniperChooseWeaponRifle].kMaxAmmo;
+        currAmmoShotgun_ = weapon_configs[SniperChooseWeaponShotgun].kMaxAmmo;
+        currAmmoMedigun_ = weapon_configs[SniperChooseWeaponMedigun].kMaxAmmo;
         rng_ = new System.Random();
 
         timeWeaponRifleCooldownStarted_ = currTime_ms;
@@ -281,10 +276,10 @@ internal class SniperCastValidator : BaseCastValidator
         timeWeaponMedigunCooldownStarted_ = currTime_ms;
         timeWeaponMedigunCooldownEnded_ = currTime_ms + 1;
 
-        currentWeaponEquipped_ = Weapon.Rifle;
+        currentWeaponEquipped_ = SniperChooseWeaponRifle;
 #if !UNITY_SERVER
         // TODO: when someone else spawns, they need info about the current weapon, or they'll just see Rifle
-        ShowWeapon(CastCode.SniperChooseWeaponRifle);
+        ClientShowWeapon(SniperChooseWeaponRifle);
 #else
 #endif
     }
@@ -298,7 +293,7 @@ internal class SniperCastValidator : BaseCastValidator
     {
         switch (rd.type)
         {
-            case CastCode.SniperWeaponRifleFire:
+            case SniperWeaponRifleFire:
 #if !UNITY_SERVER
                 if (parent_.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
                 {
@@ -311,10 +306,10 @@ internal class SniperCastValidator : BaseCastValidator
 #endif
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackLeft);
                 timeWeaponRifleCooldownStarted_ = currTime_ms;
-                timeWeaponRifleCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Rifle].kLeftCooldown;
-                currAmmoRifle_ -= weapon_configs[Weapon.Rifle].kLeftAmmoConsumed;
+                timeWeaponRifleCooldownEnded_ = currTime_ms + weapon_configs[SniperChooseWeaponRifle].kLeftCooldown;
+                currAmmoRifle_ -= weapon_configs[SniperChooseWeaponRifle].kLeftAmmoConsumed;
                 break;
-            case CastCode.SniperWeaponShotgunFire:
+            case SniperWeaponShotgunFire:
 #if !UNITY_SERVER
                 if (parent_.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
                 {
@@ -327,10 +322,10 @@ internal class SniperCastValidator : BaseCastValidator
 #endif
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackLeft);
                 timeWeaponShotgunCooldownStarted_ = currTime_ms;
-                timeWeaponShotgunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Shotgun].kLeftCooldown;
-                currAmmoShotgun_ -= weapon_configs[Weapon.Shotgun].kLeftAmmoConsumed;
+                timeWeaponShotgunCooldownEnded_ = currTime_ms + weapon_configs[SniperChooseWeaponShotgun].kLeftCooldown;
+                currAmmoShotgun_ -= weapon_configs[SniperChooseWeaponShotgun].kLeftAmmoConsumed;
                 break;
-            case CastCode.SniperWeaponMedigunFire:
+            case SniperWeaponMedigunFire:
 #if !UNITY_SERVER
                 if (parent_.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
                 {
@@ -343,10 +338,10 @@ internal class SniperCastValidator : BaseCastValidator
 #endif
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackLeft);
                 timeWeaponMedigunCooldownStarted_ = currTime_ms;
-                timeWeaponMedigunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Medigun].kLeftCooldown;
-                currAmmoMedigun_ -= weapon_configs[Weapon.Medigun].kLeftAmmoConsumed;
+                timeWeaponMedigunCooldownEnded_ = currTime_ms + weapon_configs[SniperChooseWeaponMedigun].kLeftCooldown;
+                currAmmoMedigun_ -= weapon_configs[SniperChooseWeaponMedigun].kLeftAmmoConsumed;
                 break;
-            case CastCode.SniperWeaponRifleAlternate:
+            case SniperWeaponRifleAlternate:
 #if !UNITY_SERVER
                 if (parent_.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
                 {
@@ -363,10 +358,10 @@ internal class SniperCastValidator : BaseCastValidator
                 delayedEvents_.Add(currTime_ms + 0, rd);
 
                 timeWeaponRifleCooldownStarted_ = currTime_ms;
-                timeWeaponRifleCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Rifle].kRightCooldown;
-                currAmmoRifle_ -= weapon_configs[Weapon.Rifle].kRightAmmoConsumed;
+                timeWeaponRifleCooldownEnded_ = currTime_ms + weapon_configs[SniperChooseWeaponRifle].kRightCooldown;
+                currAmmoRifle_ -= weapon_configs[SniperChooseWeaponRifle].kRightAmmoConsumed;
                 break;
-            case CastCode.SniperWeaponShotgunAlternate:
+            case SniperWeaponShotgunAlternate:
 #if !UNITY_SERVER
                 if (parent_.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
                 {
@@ -379,10 +374,10 @@ internal class SniperCastValidator : BaseCastValidator
 #endif
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackRight);
                 timeWeaponShotgunCooldownStarted_ = currTime_ms;
-                timeWeaponShotgunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Shotgun].kRightCooldown;
-                currAmmoShotgun_ -= weapon_configs[Weapon.Shotgun].kRightAmmoConsumed;
+                timeWeaponShotgunCooldownEnded_ = currTime_ms + weapon_configs[SniperChooseWeaponShotgun].kRightCooldown;
+                currAmmoShotgun_ -= weapon_configs[SniperChooseWeaponShotgun].kRightAmmoConsumed;
                 break;
-            case CastCode.SniperWeaponMedigunAlternate:
+            case SniperWeaponMedigunAlternate:
 #if !UNITY_SERVER
 
 #else
@@ -390,47 +385,47 @@ internal class SniperCastValidator : BaseCastValidator
 #endif
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperAttackRight);
                 timeWeaponMedigunCooldownStarted_ = currTime_ms;
-                timeWeaponMedigunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Medigun].kRightCooldown;
-                currAmmoMedigun_ -= weapon_configs[Weapon.Medigun].kRightAmmoConsumed;
+                timeWeaponMedigunCooldownEnded_ = currTime_ms + weapon_configs[SniperChooseWeaponMedigun].kRightCooldown;
+                currAmmoMedigun_ -= weapon_configs[SniperChooseWeaponMedigun].kRightAmmoConsumed;
                 break;
-            case CastCode.SniperReload:
+            case SniperReload:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kSniperReload);
 #if !UNITY_SERVER
-                HideCurrentWeapon();
+                ClientHideCurrentWeapon();
 #else
 #endif
-                if (currentWeaponEquipped_ == Weapon.Shotgun)
+                if (currentWeaponEquipped_ == SniperChooseWeaponShotgun)
                 {
                     reloadingShotgun_ = true;
                     timeWeaponShotgunCooldownStarted_ = currTime_ms;
-                    timeWeaponShotgunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Shotgun].kReloadLength_ms;
-                    currAmmoShotgun_ = weapon_configs[Weapon.Shotgun].kMaxAmmo;
+                    timeWeaponShotgunCooldownEnded_ = currTime_ms + weapon_configs[SniperChooseWeaponShotgun].kReloadLength_ms;
+                    currAmmoShotgun_ = weapon_configs[SniperChooseWeaponShotgun].kMaxAmmo;
                     delayedEvents_.Add(timeWeaponShotgunCooldownEnded_, rd);
                 }
-                else if (currentWeaponEquipped_ == Weapon.Medigun)
+                else if (currentWeaponEquipped_ == SniperChooseWeaponMedigun)
                 {
                     reloadingMedigun_ = true;
                     timeWeaponMedigunCooldownStarted_ = currTime_ms;
-                    timeWeaponMedigunCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Medigun].kReloadLength_ms;
-                    currAmmoMedigun_ = weapon_configs[Weapon.Medigun].kMaxAmmo;
+                    timeWeaponMedigunCooldownEnded_ = currTime_ms + weapon_configs[SniperChooseWeaponMedigun].kReloadLength_ms;
+                    currAmmoMedigun_ = weapon_configs[SniperChooseWeaponMedigun].kMaxAmmo;
                     delayedEvents_.Add(timeWeaponMedigunCooldownEnded_, rd);
                 }
                 else
                 {
                     reloadingRifle_ = true;
                     timeWeaponRifleCooldownStarted_ = currTime_ms;
-                    timeWeaponRifleCooldownEnded_ = currTime_ms + weapon_configs[Weapon.Rifle].kReloadLength_ms;
-                    currAmmoRifle_ = weapon_configs[Weapon.Rifle].kMaxAmmo;
+                    timeWeaponRifleCooldownEnded_ = currTime_ms + weapon_configs[SniperChooseWeaponRifle].kReloadLength_ms;
+                    currAmmoRifle_ = weapon_configs[SniperChooseWeaponRifle].kMaxAmmo;
                     delayedEvents_.Add(timeWeaponRifleCooldownEnded_, rd);
                 }
                 break;
-            case CastCode.SniperChooseWeaponRifle:
+            case SniperChooseWeaponRifle:
                 HalveWeaponRifleCooldown();
-                if (currentWeaponEquipped_ == Weapon.Shotgun)
+                if (currentWeaponEquipped_ == SniperChooseWeaponShotgun)
                 {
                     DoubleWeaponShotgunCooldown();
                 }
-                else if (currentWeaponEquipped_ == Weapon.Medigun)
+                else if (currentWeaponEquipped_ == SniperChooseWeaponMedigun)
                 {
                     DoubleWeaponMedigunCooldown();
                 }
@@ -438,7 +433,7 @@ internal class SniperCastValidator : BaseCastValidator
                 {
                     GameDebug.LogWarning("Choosing Rifle, but current weapon is: " + currentWeaponEquipped_);
                 }
-                currentWeaponEquipped_ = Weapon.Rifle;
+                currentWeaponEquipped_ = SniperChooseWeaponRifle;
                 if (reloadingRifle_ && currTime_ms >= timeWeaponRifleCooldownEnded_)
                 {
                     reloadingRifle_ = false;
@@ -448,13 +443,13 @@ internal class SniperCastValidator : BaseCastValidator
 #else
 #endif
                 break;
-            case CastCode.SniperChooseWeaponShotgun:
+            case SniperChooseWeaponShotgun:
                 HalveWeaponShotgunCooldown();
-                if (currentWeaponEquipped_ == Weapon.Rifle)
+                if (currentWeaponEquipped_ == SniperChooseWeaponRifle)
                 {
                     DoubleWeaponRifleCooldown();
                 }
-                else if (currentWeaponEquipped_ == Weapon.Medigun)
+                else if (currentWeaponEquipped_ == SniperChooseWeaponMedigun)
                 {
                     DoubleWeaponMedigunCooldown();
                 }
@@ -462,7 +457,7 @@ internal class SniperCastValidator : BaseCastValidator
                 {
                     GameDebug.LogWarning("Choosing Shotgun, but current weapon is: " + currentWeaponEquipped_);
                 }
-                currentWeaponEquipped_ = Weapon.Shotgun;
+                currentWeaponEquipped_ = SniperChooseWeaponShotgun;
                 if (reloadingShotgun_ && currTime_ms >= timeWeaponShotgunCooldownEnded_)
                 {
                     reloadingShotgun_ = false;
@@ -472,13 +467,13 @@ internal class SniperCastValidator : BaseCastValidator
 #else
 #endif
                 break;
-            case CastCode.SniperChooseWeaponMedigun:
+            case SniperChooseWeaponMedigun:
                 HalveWeaponMedigunCooldown();
-                if (currentWeaponEquipped_ == Weapon.Rifle)
+                if (currentWeaponEquipped_ == SniperChooseWeaponRifle)
                 {
                     DoubleWeaponRifleCooldown();
                 }
-                else if (currentWeaponEquipped_ == Weapon.Shotgun)
+                else if (currentWeaponEquipped_ == SniperChooseWeaponShotgun)
                 {
                     DoubleWeaponShotgunCooldown();
                 }
@@ -486,7 +481,7 @@ internal class SniperCastValidator : BaseCastValidator
                 {
                     GameDebug.LogWarning("Choosing Medigun, but current weapon is: " + currentWeaponEquipped_);
                 }
-                currentWeaponEquipped_ = Weapon.Medigun;
+                currentWeaponEquipped_ = SniperChooseWeaponMedigun;
                 if (reloadingMedigun_ && currTime_ms >= timeWeaponMedigunCooldownEnded_)
                 {
                     reloadingMedigun_ = false;
@@ -601,18 +596,18 @@ internal class SniperCastValidator : BaseCastValidator
     {
         switch (rd.type)
         {
-            case CastCode.SniperWeaponRifleAlternate:
+            case SniperWeaponRifleAlternate:
 #if !UNITY_SERVER
                 ClientAttackRightWeaponRifle(rd as VectorCastRD);
 #else
                 ServerAttackRightWeaponRifle(rd as VectorCastRD);
 #endif
                 break;
-            case CastCode.SniperReload:
+            case SniperReload:
                 // delayed SniperReload acts as a ping when a reload finishes. However, because reload times can slow down
                 //  when you switch to different weapons, we check the time again and re-issue another delayed SniperReload
                 //  until it's actually correct
-                if (currentWeaponEquipped_ == Weapon.Rifle && reloadingRifle_)
+                if (currentWeaponEquipped_ == SniperChooseWeaponRifle && reloadingRifle_)
                 {
                     if (currTime_ms < timeWeaponRifleCooldownEnded_)
                     {
@@ -621,11 +616,11 @@ internal class SniperCastValidator : BaseCastValidator
                     }
                     reloadingRifle_ = false;
 #if !UNITY_SERVER
-                    ShowWeapon(CastCode.SniperChooseWeaponRifle);
+                    ClientShowWeapon(SniperChooseWeaponRifle);
 #else
 #endif
                 }
-                else if (currentWeaponEquipped_ == Weapon.Shotgun && reloadingShotgun_)
+                else if (currentWeaponEquipped_ == SniperChooseWeaponShotgun && reloadingShotgun_)
                 {
                     if (currTime_ms < timeWeaponShotgunCooldownEnded_)
                     {
@@ -634,11 +629,11 @@ internal class SniperCastValidator : BaseCastValidator
                     }
                     reloadingShotgun_ = false;
 #if !UNITY_SERVER
-                    ShowWeapon(CastCode.SniperChooseWeaponShotgun);
+                    ClientShowWeapon(SniperChooseWeaponShotgun);
 #else
 #endif
                 }
-                else if (currentWeaponEquipped_ == Weapon.Medigun && reloadingMedigun_)
+                else if (currentWeaponEquipped_ == SniperChooseWeaponMedigun && reloadingMedigun_)
                 {
                     if (currTime_ms < timeWeaponMedigunCooldownEnded_)
                     {
@@ -647,7 +642,7 @@ internal class SniperCastValidator : BaseCastValidator
                     }
                     reloadingMedigun_ = false;
 #if !UNITY_SERVER
-                    ShowWeapon(CastCode.SniperChooseWeaponMedigun);
+                    ClientShowWeapon(SniperChooseWeaponMedigun);
 #else
 #endif
                 }
@@ -675,13 +670,13 @@ internal class SniperCastValidator : BaseCastValidator
         (GameObject collidedObject, Vector3 collisionPoint) = CollisionChecker.CheckCollisionOnAnyObstacle(
             rd.pos,
             rd.ori * Vector3.forward,
-            weapon_configs[Weapon.Rifle].kLeftRange,
+            weapon_configs[SniperChooseWeaponRifle].kLeftRange,
             gameObject_,
             raycastThickness: 0.01f
         );
         if (collidedObject == null)
         {
-            collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[Weapon.Rifle].kLeftRange;
+            collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[SniperChooseWeaponRifle].kLeftRange;
         }
 
         if (parent_.Uid != ClientGameLoop.CGL.UnitEntity.Uid)
@@ -699,14 +694,16 @@ internal class SniperCastValidator : BaseCastValidator
         (UnitEntity collidedTarget, Vector3 collisionPoint) = CollisionChecker.CheckCollisionOnEnemies(
             rd.pos,
             rd.ori * Vector3.forward,
-            weapon_configs[Weapon.Rifle].kLeftRange,
+            weapon_configs[SniperChooseWeaponRifle].kLeftRange,
             gameObject_,
             raycastThickness: 0.01f
         );
 
         if (collidedTarget != null)
         {
-            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, weapon_configs[Weapon.Rifle].kLeftDamage));
+            collidedTarget.EntityManager.AsyncCreateTempEvent(
+                new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, weapon_configs[SniperChooseWeaponRifle].kLeftDamage)
+            );
             GameDebug.Log("WeaponRifleFire: " + collidedTarget.Name + " @ " + collidedTarget.Health);
         }
     }
@@ -720,20 +717,20 @@ internal class SniperCastValidator : BaseCastValidator
         (GameObject collidedObject, Vector3 collisionPoint) = CollisionChecker.CheckCollisionOnAnyObstacle(
             rd.pos,
             rd.ori * Vector3.forward,
-            weapon_configs[Weapon.Rifle].kRightRange,
+            weapon_configs[SniperChooseWeaponRifle].kRightRange,
             gameObject_,
             raycastThickness: 0.01f
         );
         if (collidedObject == null)
         {
-            collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[Weapon.Rifle].kRightRange;
+            collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[SniperChooseWeaponRifle].kRightRange;
         }
 
         if (parent_.Uid != ClientGameLoop.CGL.UnitEntity.Uid)
         {
             ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(rd.pos, collisionPoint, 0.01f, Color.red));
         }
-        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new ExplosionEffect(collisionPoint, weapon_configs[Weapon.Rifle].kRightRadius));
+        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new ExplosionEffect(collisionPoint, weapon_configs[SniperChooseWeaponRifle].kRightRadius));
     }
 
     /// <summary>
@@ -745,24 +742,24 @@ internal class SniperCastValidator : BaseCastValidator
         (GameObject collidedObject, Vector3 collisionPoint) = CollisionChecker.CheckCollisionOnAnyObstacle(
             rd.pos,
             rd.ori * Vector3.forward,
-            weapon_configs[Weapon.Rifle].kRightRange,
+            weapon_configs[SniperChooseWeaponRifle].kRightRange,
             gameObject_,
             raycastThickness: 0.01f
         );
         if (collidedObject == null)
         {
-            collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[Weapon.Rifle].kRightRange;
+            collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[SniperChooseWeaponRifle].kRightRange;
         }
 
         List<UnitEntity> collidedTargets = CollisionChecker.CheckExplosionRadius(
             collisionPoint,
-            weapon_configs[Weapon.Rifle].kRightRadius,
+            weapon_configs[SniperChooseWeaponRifle].kRightRadius,
             gameObject_,
             casterImmune: false
         );
         foreach (UnitEntity otherChar in collidedTargets)
         {
-            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, weapon_configs[Weapon.Rifle].kRightDamage));
+            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, weapon_configs[SniperChooseWeaponRifle].kRightDamage));
             GameDebug.Log("WeaponRifleAlternate: " + otherChar.Name + " @ " + otherChar.Health);
         }
     }
@@ -780,13 +777,13 @@ internal class SniperCastValidator : BaseCastValidator
             (GameObject collidedObject, Vector3 collisionPoint) = CollisionChecker.CheckCollisionOnAnyObstacle(
                 rd.pos,
                 rd.ori * randomSpread,
-                weapon_configs[Weapon.Shotgun].kLeftRange,
+                weapon_configs[SniperChooseWeaponShotgun].kLeftRange,
                 gameObject_,
                 raycastThickness: 0.01f
             );
             if (collidedObject == null)
             {
-                collisionPoint = rd.pos + rd.ori * randomSpread * weapon_configs[Weapon.Shotgun].kLeftRange;
+                collisionPoint = rd.pos + rd.ori * randomSpread * weapon_configs[SniperChooseWeaponShotgun].kLeftRange;
             }
 
             if (parent_.Uid != ClientGameLoop.CGL.UnitEntity.Uid)
@@ -809,7 +806,7 @@ internal class SniperCastValidator : BaseCastValidator
             (UnitEntity collidedTarget, Vector3 collisionPoint) = CollisionChecker.CheckCollisionOnEnemies(
                 rd.pos,
                 rd.ori * randomSpread,
-                weapon_configs[Weapon.Shotgun].kLeftRange,
+                weapon_configs[SniperChooseWeaponShotgun].kLeftRange,
                 gameObject_,
                 raycastThickness: 0.01f
             );
@@ -817,7 +814,7 @@ internal class SniperCastValidator : BaseCastValidator
             if (collidedTarget != null)
             {
                 collidedTarget.EntityManager.AsyncCreateTempEvent(
-                    new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, weapon_configs[Weapon.Shotgun].kLeftDamage)
+                    new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, weapon_configs[SniperChooseWeaponShotgun].kLeftDamage)
                 );
                 GameDebug.Log("WeaponShotgunFire: " + collidedTarget.Name + " @ " + collidedTarget.Health);
             }
@@ -856,13 +853,13 @@ internal class SniperCastValidator : BaseCastValidator
         (GameObject collidedObject, Vector3 collisionPoint) = CollisionChecker.CheckCollisionOnAnyObstacle(
             rd.pos,
             rd.ori * Vector3.forward,
-            weapon_configs[Weapon.Medigun].kLeftRange,
+            weapon_configs[SniperChooseWeaponMedigun].kLeftRange,
             gameObject_,
             raycastThickness: 0.01f
         );
         if (collidedObject == null)
         {
-            collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[Weapon.Medigun].kLeftRange;
+            collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[SniperChooseWeaponMedigun].kLeftRange;
         }
 
         if (parent_.Uid != ClientGameLoop.CGL.UnitEntity.Uid)
@@ -880,14 +877,16 @@ internal class SniperCastValidator : BaseCastValidator
         (UnitEntity collidedTarget, Vector3 collisionPoint) = CollisionChecker.CheckCollisionOnEnemies(
             rd.pos,
             rd.ori * Vector3.forward,
-            weapon_configs[Weapon.Medigun].kLeftRange,
+            weapon_configs[SniperChooseWeaponMedigun].kLeftRange,
             gameObject_,
             raycastThickness: 0.01f
         );
 
         if (collidedTarget != null)
         {
-            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, weapon_configs[Weapon.Medigun].kLeftDamage)); // its Heal, not damage
+            collidedTarget.EntityManager.AsyncCreateTempEvent(
+                new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, weapon_configs[SniperChooseWeaponMedigun].kLeftDamage)
+            ); // its Heal, not damage
             GameDebug.Log("WeaponMedigunFire: " + collidedTarget.Name + " @ " + collidedTarget.Health);
         }
     }
@@ -898,7 +897,7 @@ internal class SniperCastValidator : BaseCastValidator
     /// <param name="rd">the WeaponMedigunAlternate cast</param>
     private void ServerAttackRightWeaponMedigun(CastRD rd)
     {
-        parent_.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, parent_.Uid, rd.type, weapon_configs[Weapon.Medigun].kRightDamage)); // its Heal, not damage
+        parent_.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, parent_.Uid, rd.type, weapon_configs[SniperChooseWeaponMedigun].kRightDamage)); // its Heal, not damage
     }
 
     /// <summary>
@@ -907,19 +906,19 @@ internal class SniperCastValidator : BaseCastValidator
     /// <param name="rd">the WeaponMedigunFire cast</param>
     private void ClientWeaponEquip(CastRD rd)
     {
-        HideCurrentWeapon();
+        ClientHideCurrentWeapon();
 
         if (
-            (rd.type == Globals.CastCode.SniperChooseWeaponRifle && !reloadingRifle_)
-            || (rd.type == Globals.CastCode.SniperChooseWeaponShotgun && !reloadingShotgun_)
-            || (rd.type == Globals.CastCode.SniperChooseWeaponMedigun && !reloadingMedigun_)
+            (rd.type == SniperChooseWeaponRifle && !reloadingRifle_)
+            || (rd.type == SniperChooseWeaponShotgun && !reloadingShotgun_)
+            || (rd.type == SniperChooseWeaponMedigun && !reloadingMedigun_)
         )
         {
-            ShowWeapon(rd.type);
+            ClientShowWeapon(rd.type);
         }
     }
 
-    private void HideCurrentWeapon()
+    internal void ClientHideCurrentWeapon()
     {
         if (curr_weapon_effect_uid_ == 0)
         {
@@ -929,7 +928,7 @@ internal class SniperCastValidator : BaseCastValidator
         curr_weapon_effect_uid_ = 0;
     }
 
-    private void ShowWeapon(CastCode type)
+    internal void ClientShowWeapon(CastCode type)
     {
         curr_weapon_effect_uid_ = ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new WeaponEquip(parent_, type));
     }

@@ -12,7 +12,7 @@ internal class WeaponEquip : ILocalEffect
     /// Constructs a weapon attached to a kSniper entity
     /// </summary>
     /// <param name="parent">Parent entity</param>
-    /// <param name="weapon">Weapon cast code</param>
+    /// <param name="weapon">CastCode cast code</param>
     internal WeaponEquip(UnitEntity parent, Globals.CastCode weapon)
     {
         Transform parent_transform;
