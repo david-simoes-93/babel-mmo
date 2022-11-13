@@ -119,6 +119,7 @@ internal class UnitEntity : Entity
     internal void SetAnimatorTrigger(EntityAnimationTrigger trig)
     {
 #if !UNITY_SERVER
+        GameDebug.Log("setting trigger " + trig);
         Animator.SetTrigger(AnimationTriggerStrings[trig]);
 #endif
     }
@@ -155,6 +156,7 @@ internal class UnitEntity : Entity
 
         if (newAnimatorState != CurrentAnimatorState)
         {
+            GameDebug.Log("setting state " + newAnimatorState);
             CurrentAnimatorState = newAnimatorState;
             UpdateAnimator();
         }

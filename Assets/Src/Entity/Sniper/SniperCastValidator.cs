@@ -831,8 +831,11 @@ internal class SniperCastValidator : BaseCastValidator
     private void ClientAttackRightWeaponShotgun(VectorCastRD rd)
     {
         ClientAttackLeftWeaponShotgun(rd);
-        Vector3 backwards_force = parent_.CameraTransform().rotation * Vector3.forward * -20;
-        parent_.Controller.AddVelocity(backwards_force);
+        if (parent_.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
+        {
+            Vector3 backwards_force = parent_.CameraTransform().rotation * Vector3.forward * -20;
+            parent_.Controller.AddVelocity(backwards_force);
+        }
     }
 
     /// <summary>
