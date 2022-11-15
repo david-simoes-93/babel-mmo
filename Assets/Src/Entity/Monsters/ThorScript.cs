@@ -128,6 +128,7 @@ internal class ThorScript : MonoBehaviour, IConfigurableMonster
         // every 10s
         if (
             !parent_.IsDead
+            && isAggroed_
             && lastMagnetTime_ + 10000 < Globals.currTime_ms
             && magnet_uids_.Count < 10
             && lastChainLightningTime_ + 1000 < Globals.currTime_ms

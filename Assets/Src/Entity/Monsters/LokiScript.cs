@@ -125,7 +125,7 @@ internal class LokiScript : MonoBehaviour, IConfigurableMonster
     {
         // at least 10s since aggro
         // every 10s
-        if (!parent_.IsDead && lastWaveTime_ + 10000 < Globals.currTime_ms && aggroTime_ + 10000 < Globals.currTime_ms)
+        if (!parent_.IsDead && lastWaveTime_ + 10000 < Globals.currTime_ms && aggroTime_ + 10000 < Globals.currTime_ms && isAggroed_)
         {
             waveUid_ = em_.GetValidNpcUid();
             if (random_.NextDouble() < 0.5)

@@ -292,7 +292,7 @@ internal class UnitEntity : Entity
         LeashedBy = leashedBy;
         LeashedVector = leashVector;
         SetStunned(leashedBy != null);
-        SetProperCharacterState();
+        // SetProperCharacterState() called by SetStunned
     }
 
     /// <summary>
