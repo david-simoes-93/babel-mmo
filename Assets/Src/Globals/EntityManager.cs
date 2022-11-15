@@ -562,6 +562,12 @@ internal class EntityManager
             "some_buff"
         );
         tempBuffEntities.Add(rd.uid, entity);
+
+        // If Buff with script, create script
+        if (Globals.BuffEntityScripts.ContainsKey(rd.type))
+        {
+            Globals.BuffEntityScripts[rd.type](entity);
+        }
     }
 
     /// <summary>

@@ -14,10 +14,14 @@ internal class ChargeDebuffScript : BaseBuff
     /// </summary>
     void FixedUpdate()
     {
+#if !UNITY_SERVER
+        //
+#else
         if (DebuffIfElapsed())
         {
             return;
         }
+#endif
     }
 
     /// <summary>
