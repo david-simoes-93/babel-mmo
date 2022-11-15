@@ -937,6 +937,10 @@ internal class SniperCastValidator : BaseCastValidator
     /// <param name="rd">the weapon</param>
     internal void ClientShowWeapon(CastCode type)
     {
+        if (parent_.IsDead)
+        {
+            return;
+        }
         curr_weapon_effect_uid_ = ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new WeaponEquip(parent_, type));
     }
 }
