@@ -31,6 +31,14 @@ internal class GenericParticleSystem : ILocalEffect
     }
 
     /// <summary>
+    /// Destroys the game object
+    /// </summary>
+    public void Destroy()
+    {
+        Object.Destroy(myGameObject_);
+    }
+
+    /// <summary>
     /// Stops GenericParticleSystem emission when appropriate and destroys it when all particles are gone
     /// </summary>
     /// <returns>Whether text was destroyed</returns>
@@ -47,7 +55,6 @@ internal class GenericParticleSystem : ILocalEffect
 
             if (particleCount == 0)
             {
-                Object.Destroy(myGameObject_);
                 return true;
             }
         }

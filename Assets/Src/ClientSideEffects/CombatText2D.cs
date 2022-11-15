@@ -44,6 +44,14 @@ internal class CombatText2D : ILocalEffect
     }
 
     /// <summary>
+    /// Destroys the game object
+    /// </summary>
+    public void Destroy()
+    {
+        Object.Destroy(myGameObject_);
+    }
+
+    /// <summary>
     /// Fades text out and destroys it when transparent
     /// </summary>
     /// <returns></returns>
@@ -53,7 +61,6 @@ internal class CombatText2D : ILocalEffect
 
         if (myText_.color.a <= 0)
         {
-            Object.Destroy(myGameObject_);
             return true;
         }
 

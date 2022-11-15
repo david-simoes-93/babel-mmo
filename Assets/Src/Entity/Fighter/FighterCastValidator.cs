@@ -110,7 +110,7 @@ internal class FighterCastValidator : BaseCastValidator
         switch (cd)
         {
             case CastCode.Spin:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kFighterSpin);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterSpin);
                 delayedEvents_.Add(currTime_ms + 300, rd);
                 delayedEvents_.Add(currTime_ms + 700, rd);
 
@@ -118,7 +118,7 @@ internal class FighterCastValidator : BaseCastValidator
                 timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeftCooldown;
                 break;
             case CastCode.FighterAttackLeft:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackLeft);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackLeft);
                 delayedEvents_.Add(currTime_ms + 200, rd);
 
                 timeOfLastAttackLeft_ = currTime_ms;
@@ -127,7 +127,7 @@ internal class FighterCastValidator : BaseCastValidator
                 timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeftCooldown;
                 break;
             case CastCode.FighterAttackRight:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackRight);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackRight);
                 delayedEvents_.Add(currTime_ms + 400, rd);
 
                 timeOfLastAttackRight_ = currTime_ms;
@@ -150,22 +150,22 @@ internal class FighterCastValidator : BaseCastValidator
 
                 break;
             case CastCode.DodgeBack:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeBack);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeBack);
                 timeOfLastDodge_ = currTime_ms;
                 controller_.TransitionToState(CharacterState.FighterDodgingBack);
                 break;
             case CastCode.DodgeFront:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeFront);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeFront);
                 timeOfLastDodge_ = currTime_ms;
                 controller_.TransitionToState(CharacterState.FighterDodgingFront);
                 break;
             case CastCode.DodgeLeft:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeLeft);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeLeft);
                 timeOfLastDodge_ = currTime_ms;
                 controller_.TransitionToState(CharacterState.FighterDodgingLeft);
                 break;
             case CastCode.DodgeRight:
-                parent_.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeRight);
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeRight);
                 timeOfLastDodge_ = currTime_ms;
                 controller_.TransitionToState(CharacterState.FighterDodgingRight);
                 break;

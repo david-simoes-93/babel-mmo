@@ -28,6 +28,14 @@ internal class Fireflash : ILocalEffect
     }
 
     /// <summary>
+    /// Destroys the game object
+    /// </summary>
+    public void Destroy()
+    {
+        Object.Destroy(myGameObject_);
+    }
+
+    /// <summary>
     /// Moves the Fireflash and destroys it after enough time
     /// </summary>
     /// <returns>Whether text was destroyed</returns>
@@ -45,7 +53,6 @@ internal class Fireflash : ILocalEffect
 
         if (time_to_vanish_at_ < Globals.currTime_ms)
         {
-            Object.Destroy(myGameObject_);
             return true;
         }
 

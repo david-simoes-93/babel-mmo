@@ -6,7 +6,7 @@ using KinematicCharacterController;
 using System.Collections.Generic;
 
 /// <summary>
-/// A basic CastValidator, applicable to all UnitEntities
+/// An abstract component to control the casts for a UnitEntity
 /// </summary>
 internal abstract class BaseCastValidator
 {
@@ -125,7 +125,7 @@ internal abstract class BaseCastValidator
                     GameDebug.Log("Got a CastCode.None");
                     break;
                 case CastCode.Respawn:
-                    parent_.SetAnimatorTrigger(EntityAnimationTrigger.kRevive);
+                    parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kRevive);
                     controller_.SetMotorPose(vrd.pos, Vector3.zero, vrd.ori);
                     parent_.MaxHeal();
                     parent_.UpdateLastEvent(parent_.LastEventId + 1);

@@ -251,12 +251,12 @@ internal class ThorScript : MonoBehaviour, IConfigurableMonster
         {
             AICharacterInputs characterInputs = new AICharacterInputs { MoveVector = nav_agent_.desiredVelocity.normalized, LookVector = nav_agent_.desiredVelocity };
             controller_.SetInputs(ref characterInputs);
-            parent_.SetAnimatorState(EntityAnimation.kWalkForward);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkForward);
         }
         else
         {
             controller_.SetInputs(ref MonsterControllerKin.kBeStill);
-            parent_.SetAnimatorState(EntityAnimation.kIdle);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kIdle);
         }
     }
 
@@ -271,13 +271,13 @@ internal class ThorScript : MonoBehaviour, IConfigurableMonster
         {
             AICharacterInputs characterInputs = new AICharacterInputs { MoveVector = nav_agent_.desiredVelocity.normalized, LookVector = nav_agent_.desiredVelocity };
             controller_.SetInputs(ref characterInputs);
-            parent_.SetAnimatorState(EntityAnimation.kWalkForward);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkForward);
         }
         else
         {
             AICharacterInputs characterInputs = new AICharacterInputs { MoveVector = Vector3.zero, LookVector = closestEntityDirection };
             controller_.SetInputs(ref characterInputs);
-            parent_.SetAnimatorState(EntityAnimation.kIdle);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kIdle);
         }
     }
 

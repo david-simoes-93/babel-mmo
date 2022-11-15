@@ -68,7 +68,7 @@ internal class ValkyrieScript : MonoBehaviour, IConfigurableMonster
     private void MoveToSpawn()
     {
         controller_.SetInputs(ref MonsterControllerKin.kBeStill);
-        parent_.SetAnimatorState(EntityAnimation.kIdle);
+        parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kIdle);
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ internal class ValkyrieScript : MonoBehaviour, IConfigurableMonster
                 LookVector = lookVector
             };
             controller_.SetInputs(ref characterInputs);
-            parent_.SetAnimatorState(EntityAnimation.kWalkForward);
+            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkForward);
         }
         else
         {
@@ -131,7 +131,7 @@ internal class ValkyrieScript : MonoBehaviour, IConfigurableMonster
         Vector3 lookVector = new Vector3(closestEntityDirection.x, 0, closestEntityDirection.z);
         AICharacterInputs characterInputs = new AICharacterInputs { MoveVector = closestEntityDirection.normalized, LookVector = lookVector };
         controller_.SetInputs(ref characterInputs);
-        parent_.SetAnimatorState(EntityAnimation.kWalkForward);
+        parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkForward);
     }
 
     /// <summary>

@@ -52,7 +52,7 @@ internal class NetworkClient
         // pose of player
         Transform rb = player.UnitTransform();
         BaseControllerKin controller = player.Controller;
-        UnidentifiedURD urd = new UnidentifiedURD(rb.position, controller.GetMotorSpeed(), rb.rotation, player.CurrentAnimatorState, player.LastEventId);
+        UnidentifiedURD urd = new UnidentifiedURD(rb.position, controller.GetMotorSpeed(), rb.rotation, player.UnitAnimator.CurrentAnimatorState, player.LastEventId);
         byte[] unreliableDataBytes = urd.ToBytes();
 
         // only send pose if about to timeout or if current pose != from last sent pose

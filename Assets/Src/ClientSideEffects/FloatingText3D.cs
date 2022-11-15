@@ -37,6 +37,14 @@ internal class FloatingText3D : ILocalEffect
     }
 
     /// <summary>
+    /// Destroys the game object
+    /// </summary>
+    public void Destroy()
+    {
+        Object.Destroy(myGameObject_);
+    }
+
+    /// <summary>
     /// Floats the text upwards, faces it to camera, and destroys it when it times out
     /// </summary>
     /// <returns>Whether text was destroyed</returns>
@@ -49,7 +57,6 @@ internal class FloatingText3D : ILocalEffect
 
         if (time_to_vanish_at_ < Globals.currTime_ms)
         {
-            Object.Destroy(myGameObject_);
             return true;
         }
 
