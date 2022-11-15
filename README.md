@@ -22,7 +22,9 @@ What classes are there in Babel?
 - The Fighter: third person camera, plays similarly to a JRPG, with simple controls but complex combos. The fighter acts like a melee brawler or warrior, having high health and dealing good melee single target damage. The fighter is also able to enter a defensive stance, dealing less damage, but also healing himself and taking reduced damage.
 - The Sniper: first person camera, plays similarly to a FPS, with simple controls and high-skill ceiling. The sniper is a ranged attacker with long, medium, and close range options. The sniper might also heal himself or his allies with a medi-gun.
 - The Strategist: third person camera, plays similarly to a MOBA, with simple controls but complex combos. The strategist is an AoE attacker with short and medium range directional abilities. He excels at controlling the battlefield (freezing enemies, shielding allies, creating physical barriers, pushing targets away).
-- The mage: third person camera, plays similarly to an MMO, with complex controls. The mage is a ranged attacker with long and medium range options. The mage targets his enemies/allies and casts spells (some helpful, others harmful) at them, often having low mobility.
+- The Mage: third person camera, plays similarly to an MMO, with complex controls. The mage is a ranged attacker with long and medium range options. The mage targets his enemies/allies and casts spells (some helpful, others harmful) at them, often having low mobility.
+
+![image](https://user-images.githubusercontent.com/9117323/202024348-81f82675-c7f2-401c-b6dc-f07463af6d60.png)
 
 Each class gives a party (a group of players that have allied with one another) a different HUD benefit:
 - The Fighter: ?
@@ -41,6 +43,8 @@ What bosses are currently implemented?
 - Thor: has a thundercloud rotating around the map dealing tons of damage (players must avoid this); casts a Chain Lightning (players must be spread out); summons magnets that allow the Chain Lightning to bounce to others (must be killed quickly); does a Thunder Slam on damage electrifying the floor (players must jump when Thor lands); attacks melee;
 - Loki: creates clones of himself on damage-taken, with less HP but dealing the same damage; creates a Cursed Wall that sweeps the map killing everone (must be avoided by taking the teleporters on the platform to cross the map); attacks ranged
 - Odin: not yet implemented. The idea is that, at some point, Odin destroys the map and everyone falls into a small planet where they move around with 3d gravity. And other stuff worthy of final boss fight
+
+![image](https://user-images.githubusercontent.com/9117323/202024925-92993e95-d544-4b64-a6f8-5239caa39adb.png)
 
 ## Building Babel
 
