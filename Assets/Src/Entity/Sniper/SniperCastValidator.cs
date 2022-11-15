@@ -918,6 +918,9 @@ internal class SniperCastValidator : BaseCastValidator
         }
     }
 
+    /// <summary>
+    /// Client-side call. Sniper hides current weapon's LocalEffect
+    /// </summary>
     internal void ClientHideCurrentWeapon()
     {
         if (curr_weapon_effect_uid_ == 0)
@@ -928,6 +931,10 @@ internal class SniperCastValidator : BaseCastValidator
         curr_weapon_effect_uid_ = 0;
     }
 
+    /// <summary>
+    /// Client-side call. Sniper creates a given weapon's LocalEffect
+    /// </summary>
+    /// <param name="rd">the weapon</param>
     internal void ClientShowWeapon(CastCode type)
     {
         curr_weapon_effect_uid_ = ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new WeaponEquip(parent_, type));

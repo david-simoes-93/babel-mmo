@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using static Globals;
 
+/// <summary>
+/// An abstract component to control animations for a UnitEntity
+/// </summary>
 internal abstract class BaseAnimator
 {
     protected UnitEntity parent_;
@@ -13,6 +16,10 @@ internal abstract class BaseAnimator
 
     internal BaseAnimator() { }
 
+    /// <summary>
+    /// Configures the local variables the animator will use
+    /// </summary>
+    /// <param name="parent">the UnitEntity this animator belongs to</param>
     internal void Config(UnitEntity parent)
     {
         parent_ = parent;

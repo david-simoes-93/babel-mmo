@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// An abstract component to control the camera for a client UnitEntity
+/// </summary>
 internal abstract class BaseCamera : MonoBehaviour
 {
     [Header("Framing")]

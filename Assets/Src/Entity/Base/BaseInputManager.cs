@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using static Globals;
 
+/// <summary>
+/// An abstract component to control the commands/inputs for a client UnitEntity
+/// </summary>
 internal abstract class BaseInputManager : MonoBehaviour
 {
     protected const int kLeftMouseButton = 0,

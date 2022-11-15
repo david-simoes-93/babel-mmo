@@ -39,6 +39,9 @@ internal struct PlayerCharacterInputs
     //internal bool DodgeL, DodgeR, DodgeF, DodgeB;
 }
 
+/// <summary>
+/// An abstract component to control the body for a UnitEntity
+/// </summary>
 internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
 {
     public KinematicCharacterMotor Motor = null;

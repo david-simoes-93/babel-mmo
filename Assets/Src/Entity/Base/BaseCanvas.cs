@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// An abstract component to control the GUI for a client UnitEntity
+/// </summary>
 internal abstract class BaseCanvas : MonoBehaviour
 {
     protected int currentHp_;

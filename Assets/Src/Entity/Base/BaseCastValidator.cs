@@ -6,7 +6,7 @@ using KinematicCharacterController;
 using System.Collections.Generic;
 
 /// <summary>
-/// A basic CastValidator, applicable to all UnitEntities
+/// An abstract component to control the casts for a UnitEntity
 /// </summary>
 internal abstract class BaseCastValidator
 {

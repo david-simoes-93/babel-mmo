@@ -12,6 +12,9 @@ internal interface ILocalEffect
     /// <returns>Returns true when LocalEffect has terminated and should be removed from any list containing it</returns>
     bool Update();
 
+    /// <summary>
+    /// Destroys the effect's GameObject and clears out any other necessary internals
+    /// </summary>
     void Destroy();
 }
 
@@ -35,15 +38,20 @@ internal class LocalEntityManager
     }
 
     /// <summary>
-    /// Adds a new LocalEffect to the LEM
+    ///  Adds a new LocalEffect to the LEM
     /// </summary>
-    /// <param name="effect"></param>
+    /// <param name="effect">target effect</param>
+    /// <returns>the UID of the LocalEffect</returns>
     internal int AddLocalEffect(ILocalEffect effect)
     {
         combatEffects_.Add(++effectUidCounter, effect);
         return effectUidCounter;
     }
 
+    /// <summary>
+    /// Removes a LocalEffect by ID
+    /// </summary>
+    /// <param name="effect_uid">the UID of the LocalEffect</param>
     internal void Remove(int effect_uid)
     {
         if (!combatEffects_.ContainsKey(effect_uid))

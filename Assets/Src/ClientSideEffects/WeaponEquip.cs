@@ -2,7 +2,7 @@
 using UnityEditor;
 
 /// <summary>
-/// A Laser effect, vanishing over time
+/// A WeaponEquip effect, only vanishes when deleted
 /// </summary>
 internal class WeaponEquip : ILocalEffect
 {
@@ -53,8 +53,6 @@ internal class WeaponEquip : ILocalEffect
                 myGameObject_ = Object.Instantiate(Globals.kEmptyPrefab, parent_transform);
                 break;
         }
-        //myGameObject_.transform.position = src;
-        //myGameObject_.transform.localScale *= explosionRadius / 2;
     }
 
     /// <summary>
