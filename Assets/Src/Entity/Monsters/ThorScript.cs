@@ -237,6 +237,7 @@ internal class ThorScript : MonoBehaviour, IConfigurableMonster
                 Jump = true
             };
             controller_.SetInputs(ref characterInputs);
+            controller_.AddVelocity(new Vector3(0, 10f, 0));
         }
     }
 
