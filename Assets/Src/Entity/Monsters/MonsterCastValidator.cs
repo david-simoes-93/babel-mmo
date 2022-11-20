@@ -119,8 +119,8 @@ internal class MonsterCastValidator : BaseCastValidator
                 break;
             case CastCode.ThorSlam:
                 // Animations don't always start IMMEDIATELY, so we instead have the character jump
-                //parent_.SetAnimatorTrigger(EntityAnimationTrigger.kThorSlam); // 800ms
-                delayedEvents_.Add(currTime_ms + 600, rd);
+                //parent_.SetAnimatorTrigger(EntityAnimationTrigger.kThorSlam);
+                delayedEvents_.Add(currTime_ms + 1300, rd);
                 break;
             case CastCode.ThorChainLightning:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kThorChainLightning);
