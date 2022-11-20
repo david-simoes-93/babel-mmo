@@ -216,6 +216,13 @@ internal class UnitEntity : Entity
             UnityEngine.Object.Destroy(guiGameObject_);
             guiGameObject_ = null;
         }
+
+        // When a UnitEntity is despawned, it might have Buffs on it, which must be cleared from EntityManager
+        var buffUids = new List<int>(current_buffs_.Values);
+        foreach (int buffUid in buffUids)
+        {
+            EntityManager.DestroyBuff(buffUid);
+        }
     }
 
     /// <summary>
