@@ -211,19 +211,35 @@ internal class SniperCastValidator : BaseCastValidator
         return !parent_.IsDead;
     }
 
-    internal bool HasAmmo()
+    internal bool HasAmmoLeft()
     {
         if (currentWeaponEquipped_ == SniperChooseWeaponShotgun)
         {
-            return currAmmoShotgun_ != 0;
+            return currAmmoShotgun_ >= weapon_configs[SniperChooseWeaponShotgun].kLeftAmmoConsumed;
         }
         else if (currentWeaponEquipped_ == SniperChooseWeaponMedigun)
         {
-            return currAmmoMedigun_ != 0;
+            return currAmmoMedigun_ >= weapon_configs[SniperChooseWeaponMedigun].kLeftAmmoConsumed;
         }
         else
         {
-            return currAmmoRifle_ != 0;
+            return currAmmoRifle_ >= weapon_configs[SniperChooseWeaponRifle].kLeftAmmoConsumed;
+        }
+    }
+
+    internal bool HasAmmoRight()
+    {
+        if (currentWeaponEquipped_ == SniperChooseWeaponShotgun)
+        {
+            return currAmmoShotgun_ >= weapon_configs[SniperChooseWeaponShotgun].kRightAmmoConsumed;
+        }
+        else if (currentWeaponEquipped_ == SniperChooseWeaponMedigun)
+        {
+            return currAmmoMedigun_ >= weapon_configs[SniperChooseWeaponMedigun].kRightAmmoConsumed;
+        }
+        else
+        {
+            return currAmmoRifle_ >= weapon_configs[SniperChooseWeaponRifle].kRightAmmoConsumed;
         }
     }
 
