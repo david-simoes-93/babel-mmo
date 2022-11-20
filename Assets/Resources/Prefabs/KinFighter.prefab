@@ -142,6 +142,7 @@ MonoBehaviour:
   MeshRoot: {fileID: 3938892275241659135}
   CameraFollowPoint: {fileID: 3938509084326599875}
   TargetingPoint: {fileID: 1840515251201586191}
+  DoubleJumpEnabled: 1
 --- !u!114 &3972408623974398367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1813,6 +1814,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
