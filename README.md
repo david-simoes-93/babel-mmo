@@ -9,7 +9,8 @@ At the moment, Babel is a proof-of-concept: a cooperative dungeon for (ideally) 
 There is no concept of XP or levels in Babel. There are different worlds, the floors of the Tower of Babel, and each world has some specific theme, and requirements for a player to ascend to the next floor. 
 - The first world would be a simple tutorial world, cyber-retro style. The requirements to ascend would be completing the quests to get the core abilities of your character, some gear, and reaching top 10 of a 50-player arena match.
 - The second world would be a Nordic world, full of ice, snow, and appropriate monsters. The players could explore several different villages and the wilderness. The requirements to ascent would be defeating the Dungeon of Valhalla (the currently implemented dungeon) and to have accumulated 500 PvP kills.
-- The third world would be a Lovecraftian horror region. Zombies, vampires, and other monsters of the dark roam the lands, haunted manors, mysteryous lights, and the region is eternally surrounded by fog (toroidal map, walking into the fog would make a character appear on the other side of the map)
+- The third world would be a Lovecraftian horror region. Zombies, vampires, and other monsters of the dark roam the lands, haunted manors, mysterious lights, and the region is eternally surrounded by fog (toroidal map, walking into the fog would make a character appear on the other side of the map)
+- Fourth world, Arrakis-inspired desert landscape. Scorching heat, oasises, pyramids, lost ruins, mummies, sand-worms, and so much else to add here
 ...
 
 There could even be floors representing different times of the same place (like floor 10 you would meet some NPCs on a city, floor 21 you would find the city in ruins after some attack, half the NPCs dead, and the other asking for your help).
