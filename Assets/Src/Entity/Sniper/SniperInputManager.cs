@@ -233,26 +233,7 @@ internal class SniperInputManager : BaseInputManager
 
         ResolveConflictingKeys();
 
-        if (moveFront_)
-        {
-            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkForward);
-        }
-        else if (moveLeft_)
-        {
-            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkLeft);
-        }
-        else if (moveRight_)
-        {
-            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkRight);
-        }
-        else if (moveBack_)
-        {
-            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kWalkBack);
-        }
-        else
-        {
-            parent_.UnitAnimator.SetAnimatorState(EntityAnimation.kIdle);
-        }
+        parent_.UnitAnimator.setBasicMovementAnimationState(moveFront_, moveLeft_, moveRight_, moveBack_);
 
         // check ammo and attack/reload
         if (attackLeft_ && !validator_.HasAmmoLeft())

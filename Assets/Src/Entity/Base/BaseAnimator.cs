@@ -36,32 +36,28 @@ internal abstract class BaseAnimator
     internal abstract void SpecificConfig(UnitEntity parent);
 
     /// <summary>
-    /// iterates over animations[], setting everything to false except given 'state'.
-    /// this also check controller states (which have priority over movement animations) and uses those as adequate
-    /// this sets currentAnimatorState, which will be propagated through the network
+    /// checks unit-specific controller states (which have priority over movement animations) and uses those as adequate.
+    /// otherwise, sets currentAnimatorState, which will be propagated through the network
     /// </summary>
     /// <param name="state"></param>
     internal void SetAnimatorState(EntityAnimation state)
     {
-        if (SpecificSetAnimatorState(state))
+        if (SpecificSetAnimatorState())
         {
             return;
         }
-
         if (state != CurrentAnimatorState)
         {
-            GameDebug.Log("setting state " + state);
             CurrentAnimatorState = state;
             UpdateAnimator();
         }
     }
 
     /// <summary>
-    /// Called by SetAnimatorState() to set unit-specific states
+    /// Called by SetAnimatorState() to set unit-specific states, based on controller state
     /// </summary>
-    /// <param name="state"></param>
     /// <returns>true if EntityAnimation was set correctly</returns>
-    internal abstract bool SpecificSetAnimatorState(EntityAnimation state);
+    internal abstract bool SpecificSetAnimatorState();
 
     /// <summary>
     /// Triggers animator with given animation
@@ -70,7 +66,6 @@ internal abstract class BaseAnimator
     internal void SetAnimatorTrigger(EntityAnimationTrigger trig)
     {
 #if !UNITY_SERVER
-        GameDebug.Log("setting trigger " + trig);
         AnimatorObj.SetTrigger(AnimationTriggerStrings[trig]);
 #endif
     }
@@ -87,5 +82,29 @@ internal abstract class BaseAnimator
         }
         AnimatorObj.SetBool(localAnimationStrings_[CurrentAnimatorState], true);
 #endif
+    }
+
+    internal void setBasicMovementAnimationState(bool moveFront, bool moveLeft, bool moveRight, bool moveBack)
+    {
+        if (moveFront)
+        {
+            SetAnimatorState(EntityAnimation.kWalkForward);
+        }
+        else if (moveLeft)
+        {
+            SetAnimatorState(EntityAnimation.kWalkLeft);
+        }
+        else if (moveRight)
+        {
+            SetAnimatorState(EntityAnimation.kWalkRight);
+        }
+        else if (moveBack)
+        {
+            SetAnimatorState(EntityAnimation.kWalkBack);
+        }
+        else
+        {
+            SetAnimatorState(EntityAnimation.kIdle);
+        }
     }
 }

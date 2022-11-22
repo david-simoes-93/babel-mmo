@@ -119,6 +119,7 @@ internal class MageCastValidator : BaseCastValidator
                 channelingSpell = CastCode.MageRenew;
                 break;
             case CastCode.MagePyroblastEnd:
+            // fallthrough
             case CastCode.MageRenewEnd:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kMageChannelEnd);
                 channelingSpell = CastCode.None;
