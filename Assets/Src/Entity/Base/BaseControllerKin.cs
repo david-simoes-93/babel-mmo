@@ -64,6 +64,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
     public float JumpScalableForwardSpeed = 1f;
     public float JumpPreGroundingGraceTime = 0f;
     public float JumpPostGroundingGraceTime = 0f;
+    public bool DoubleJumpEnabled = false;
 
     [Header("Misc")]
     public List<Collider> IgnoredColliders = new List<Collider>();
@@ -77,6 +78,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
     internal Vector3 _moveInputVector;
     internal Vector3 _lookInputVector;
     internal bool _jumpRequested = false;
+    internal bool _doubleJumpConsumed = false;
     internal bool _jumpConsumed = false;
     internal bool _jumpedThisFrame = false;
     internal float _timeSinceJumpRequested = Mathf.Infinity;
@@ -508,6 +510,19 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
                         _jumpConsumed = true;
                         _jumpedThisFrame = true;
                     }
+                    // See if we actually are allowed to jump
+                    else if (DoubleJumpEnabled && !_doubleJumpConsumed && !Motor.GroundingStatus.IsStableOnGround)
+                    {
+                        // Calculate jump direction before ungrounding
+                        Vector3 jumpDirection = Motor.CharacterUp;
+
+                        // Add to the return velocity and reset jump state
+                        currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+
+                        _jumpRequested = false;
+                        _doubleJumpConsumed = true;
+                        _jumpedThisFrame = true;
+                    }
                 }
 
                 // Take into account additive velocity
@@ -574,6 +589,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
                         if (!_jumpedThisFrame)
                         {
                             _jumpConsumed = false;
+                            _doubleJumpConsumed = false;
                         }
                         _timeSinceLastAbleToJump = 0f;
                     }

@@ -255,9 +255,13 @@ internal class SniperInputManager : BaseInputManager
         }
 
         // check ammo and attack/reload
-        if ((attackLeft_ || attackRight_) && !validator_.HasAmmo())
+        if (attackLeft_ && !validator_.HasAmmoLeft())
         {
             attackLeft_ = false;
+            reload_ = true;
+        }
+        else if (attackRight_ && !validator_.HasAmmoRight())
+        {
             attackRight_ = false;
             reload_ = true;
         }

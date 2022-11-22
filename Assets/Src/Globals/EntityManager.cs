@@ -240,7 +240,7 @@ internal class EntityManager
                     ProcessDestroyEffect(rd as DestroyRD);
                     break;
                 case ReliableData.TcpMessCode.Buff:
-                    ClientProcessCreateBuff(rd as BuffRD);
+                    ProcessCreateBuff(rd as BuffRD);
                     break;
                 case ReliableData.TcpMessCode.Debuff:
                     ProcessDestroyBuff(rd as DebuffRD);
@@ -286,7 +286,7 @@ internal class EntityManager
                     ProcessDestroyEffect(rd as DestroyRD);
                     break;
                 case ReliableData.TcpMessCode.Buff:
-                    ServerProcessCreateBuff(rd as BuffRD);
+                    ProcessCreateBuff(rd as BuffRD);
                     break;
                 case ReliableData.TcpMessCode.Debuff:
                     ProcessDestroyBuff(rd as DebuffRD);
@@ -550,31 +550,25 @@ internal class EntityManager
     /// Processes a ReliableData of type Buff
     /// </summary>
     /// <param name="rd">the update</param>
-    private void ClientProcessCreateBuff(BuffRD rd)
+    private void ProcessCreateBuff(BuffRD rd)
     {
         GameDebug.Log("Buffing " + rd.type + " (" + rd.uid + ") on " + rd.target_uid);
 
         // spawn entity of type rd.type
         BuffEntity entity = new BuffEntity(rd.uid, rd.type);
-        entity.Create(
-            rd.caster_uid == playerUid_ ? ClientGameLoop.CGL.UnitEntity : tempUnitEntities[rd.caster_uid],
-            rd.target_uid == playerUid_ ? ClientGameLoop.CGL.UnitEntity : tempUnitEntities[rd.target_uid],
-            "some_buff"
-        );
-        tempBuffEntities.Add(rd.uid, entity);
-    }
-
-    /// <summary>
-    /// Processes a ReliableData of type Buff
-    /// </summary>
-    /// <param name="rd">the update</param>
-    private void ServerProcessCreateBuff(BuffRD rd)
-    {
-        GameDebug.Log("Buffing " + rd.type + " (" + rd.uid + ") on " + rd.target_uid);
-
-        // spawn entity of type rd.type
-        BuffEntity entity = new BuffEntity(rd.uid, rd.type);
-        entity.Create(tempUnitEntities[rd.caster_uid], tempUnitEntities[rd.target_uid], "some_buff");
+        UnitEntity caster = FindUnitEntityByUid(rd.caster_uid);
+        if (caster == null)
+        {
+            GameDebug.Log("Trying to add a buff " + rd.type + " (" + rd.uid + ") from entity that no longer exists: " + rd.caster_uid);
+            return;
+        }
+        UnitEntity target = FindUnitEntityByUid(rd.target_uid);
+        if (target == null)
+        {
+            GameDebug.Log("Trying to add a buff " + rd.type + " (" + rd.uid + ") on entity that no longer exists: " + rd.target_uid);
+            return;
+        }
+        entity.Create(caster, target, "buff_" + rd.uid);
         tempBuffEntities.Add(rd.uid, entity);
 
         // If Buff with script, create script
@@ -591,14 +585,22 @@ internal class EntityManager
     private void ProcessDestroyBuff(DebuffRD rd)
     {
         GameDebug.Log("Debuffing " + rd.uid);
-        if (tempBuffEntities.ContainsKey(rd.uid))
+        DestroyBuff(rd.uid);
+    }
+
+    /// <summary>
+    /// Destroy a Buff and internally remove it
+    /// </summary>
+    internal void DestroyBuff(int buffUid)
+    {
+        if (tempBuffEntities.ContainsKey(buffUid))
         {
-            tempBuffEntities[rd.uid].Destroy();
-            tempBuffEntities.Remove(rd.uid);
+            tempBuffEntities[buffUid].Destroy();
+            tempBuffEntities.Remove(buffUid);
         }
         else
         {
-            GameDebug.Log("ERROR: Tried to destroy buff that didnt exist: " + rd.uid);
+            GameDebug.Log("ERROR: Tried to destroy buff that didnt exist: " + buffUid);
         }
     }
 

@@ -8,8 +8,8 @@ using static Globals;
 /// </summary>
 internal class BuffEntity : Entity
 {
-    internal UnitEntity caster;
-    internal UnitEntity target;
+    internal UnitEntity caster { get; private set; }
+    internal UnitEntity target { get; private set; }
     internal BuffEntityCode Type { get; private set; }
 
     /// <summary>

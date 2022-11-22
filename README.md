@@ -72,11 +72,10 @@ There are many things to add:
 - Implement gear
 - Implement sound (sound FX and background music)
 - Implement persistent databases, storing positional data, gear, and whatever else
-- Rework anymations. Legs and torso should be separate, such that movement doesn't affect punches or other anymations.
+- Rework animations. Legs and torso should be separate, such that movement doesn't affect punches or other anymations.
 - Implement a friendly NPC system, who could be interacted with as a vendor or quest giver
 - Implement more skills and talents for all classes
 - Make things pretty (we're just adding the same laser over and over, and using colored circles for visual effects)
-- Add visual guns to Sniper
 - Add CI: unit and integration tests
 - Add containers (dockerfiles)
 

@@ -14,10 +14,14 @@ internal class FrostflashDebuffScript : BaseBuff
     /// </summary>
     void FixedUpdate()
     {
+#if !UNITY_SERVER
+        //
+#else
         if (DebuffIfElapsed())
         {
             return;
         }
+#endif
     }
 
     void OnDestroy()

@@ -15,6 +15,9 @@ internal class FireflashDebuffScript : BaseBuff
     /// </summary>
     void FixedUpdate()
     {
+#if !UNITY_SERVER
+        //
+#else
         // tick at 2Hz
         if (Globals.currTime_ms < last_tick_time_ms_ + 500)
             return;
@@ -26,6 +29,7 @@ internal class FireflashDebuffScript : BaseBuff
 
         last_tick_time_ms_ = Globals.currTime_ms;
         buff_.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(buff_.caster.Uid, buff_.target.Uid, CastCode.MageFireflashTick, 5));
+#endif
     }
 
     void OnDestroy() { }
