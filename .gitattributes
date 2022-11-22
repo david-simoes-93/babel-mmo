@@ -5,3 +5,4 @@ Assets/Resources* filter=lfs diff=lfs merge=lfs -text
 *.prefab -diff
 *.mat -diff
 *.png -diff
+*.controller -diff
