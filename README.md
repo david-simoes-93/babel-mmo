@@ -80,7 +80,6 @@ There are many things to add:
 - Add containers (dockerfiles)
 
 Bugs:
-- Fix Mage casting animation (not resetting on death)
 - Balance bosses for 4 players
 - Many others, surely
 
