@@ -28,7 +28,7 @@ internal class FireflashDebuffScript : BaseBuff
         }
 
         last_tick_time_ms_ = Globals.currTime_ms;
-        buff_.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(buff_.caster.Uid, buff_.target.Uid, CastCode.MageFireflashTick, 5));
+        buff_.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(buff_.caster.Uid, buff_.target.Uid, CastCode.MageFireflashTick, 3));
 #endif
     }
 

@@ -11,11 +11,11 @@ internal class MageCastValidator : BaseCastValidator
         timeOfLastRenew_ = 0;
 
     internal const int kFireflashRange = 30,
-        kFireflashDamage = 10;
+        kFireflashDamage = 5;
     internal const int kFrostflashRange = 30,
-        kFrostflashDamage = 20;
+        kFrostflashDamage = 10;
     internal const int kArcaneflashRange = 30,
-        kArcaneflashDamage = 40;
+        kArcaneflashDamage = 20;
     internal const int kPyroblastCooldown = 10000,
         kPyroblastRange = 60,
         kPyroblastDamage = 100,
