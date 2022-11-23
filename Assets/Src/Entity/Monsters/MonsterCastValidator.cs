@@ -155,7 +155,7 @@ internal class MonsterCastValidator : BaseCastValidator
         {
             case CastCode.MonsterAttackLeft:
 #if !UNITY_SERVER
-                //
+                ClientAttackLeft(rd as TargetedCastRD);
 #else
                 ServerAttackLeft(rd as TargetedCastRD);
 #endif
@@ -243,6 +243,22 @@ internal class MonsterCastValidator : BaseCastValidator
     /// </summary>
     /// <param name="rd">the CastRD event</param>
     internal override void SpecificServersideCheck(CastRD rd) { }
+
+    /// <summary>
+    /// Client-side call. NPC casts a MonsterAttackLeft
+    /// </summary>
+    /// <param name="rd">the MonsterAttackLeft cast</param>
+    private void ClientAttackLeft(TargetedCastRD rd)
+    {
+        UnitEntity target = parent_.EntityManager.FindUnitEntityByUid(rd.target_uid);
+        if (target == null)
+        {
+            return;
+        }
+        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
+            new GenericTemporaryEffect(target.TargetingTransform.position, Quaternion.identity, 0.5f, Globals.kMonsterHitPrefab, 1000)
+        );
+    }
 
     /// <summary>
     /// Server-side call. NPC casts a MonsterAttackLeft
