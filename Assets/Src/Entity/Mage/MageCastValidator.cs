@@ -11,11 +11,11 @@ internal class MageCastValidator : BaseCastValidator
         timeOfLastRenew_ = 0;
 
     internal const int kFireflashRange = 30,
-        kFireflashDamage = 10;
+        kFireflashDamage = 5;
     internal const int kFrostflashRange = 30,
-        kFrostflashDamage = 20;
+        kFrostflashDamage = 10;
     internal const int kArcaneflashRange = 30,
-        kArcaneflashDamage = 40;
+        kArcaneflashDamage = 20;
     internal const int kPyroblastCooldown = 10000,
         kPyroblastRange = 60,
         kPyroblastDamage = 100,
@@ -119,6 +119,7 @@ internal class MageCastValidator : BaseCastValidator
                 channelingSpell = CastCode.MageRenew;
                 break;
             case CastCode.MagePyroblastEnd:
+            // fallthrough
             case CastCode.MageRenewEnd:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kMageChannelEnd);
                 channelingSpell = CastCode.None;
@@ -171,20 +172,31 @@ internal class MageCastValidator : BaseCastValidator
                 break;
             case CastCode.MagePyroblast:
 #if !UNITY_SERVER
-                ClientPyroblastEnd(rd as TargetedCastRD);
+                //
 #else
                 ServerPyroblastEnd(rd as TargetedCastRD);
 #endif
                 break;
             case CastCode.MageRenew:
 #if !UNITY_SERVER
-                ClientRenewEnd(rd as TargetedCastRD);
+                //
 #else
                 ServerRenewEnd(rd as TargetedCastRD);
 #endif
                 break;
             case CastCode.MagePyroblastEnd:
+#if !UNITY_SERVER
+                ClientPyroblastEnd(rd as TargetedCastRD);
+#else
+                //
+#endif
+                break;
             case CastCode.MageRenewEnd:
+#if !UNITY_SERVER
+                ClientRenewEnd(rd as TargetedCastRD);
+#else
+                //
+#endif
                 break;
             case CastCode.MageCastStop:
                 break;
@@ -414,7 +426,6 @@ internal class MageCastValidator : BaseCastValidator
     /// <param name="rd">the Fireflash cast</param>
     private void ClientFireflash(TargetedCastRD rd)
     {
-        // TODO make proper fire flash on target
         UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
         UnitEntity target = parent_.EntityManager.FindUnitEntityByUid(rd.target_uid);
         if (source == null || target == null)
@@ -447,7 +458,6 @@ internal class MageCastValidator : BaseCastValidator
     /// <param name="rd">the Frosbolt cast</param>
     private void ClientFrostflash(TargetedCastRD rd)
     {
-        // TODO make proper frost flash on target
         UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
         UnitEntity target = parent_.EntityManager.FindUnitEntityByUid(rd.target_uid);
         if (source == null || target == null)
@@ -480,7 +490,6 @@ internal class MageCastValidator : BaseCastValidator
     /// <param name="rd">the Arcaneflash cast</param>
     private void ClientArcaneflash(TargetedCastRD rd)
     {
-        // TODO make proper arcane flash on target
         UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
         UnitEntity target = parent_.EntityManager.FindUnitEntityByUid(rd.target_uid);
         if (source == null || target == null)
@@ -489,6 +498,9 @@ internal class MageCastValidator : BaseCastValidator
         }
         ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
             new LaserEffect(source.TargetingTransform.position, target.TargetingTransform.position, 0.01f, Color.magenta)
+        );
+        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
+            new GenericTemporaryEffect(target.TargetingTransform.position, Quaternion.identity, 0.5f, Globals.kArcaneflashPrefab, 1000)
         );
     }
 
@@ -543,12 +555,11 @@ internal class MageCastValidator : BaseCastValidator
     }
 
     /// <summary>
-    /// Server-side call. Mage finishes casting  a Renew
+    /// Server-side call. Mage finishes casting a Renew
     /// </summary>
     /// <param name="rd">the Renew cast</param>
     private void ClientRenewEnd(TargetedCastRD rd)
     {
-        // TODO make proper pyroblast chasing target
         UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
         UnitEntity target = parent_.EntityManager.FindUnitEntityByUid(rd.target_uid);
         if (source == null || target == null)
@@ -561,7 +572,7 @@ internal class MageCastValidator : BaseCastValidator
     }
 
     /// <summary>
-    /// Server-side call. Mage finishes casting  a Renew
+    /// Server-side call. Mage finishes casting a Renew
     /// </summary>
     /// <param name="rd">the Renew cast</param>
     private void ServerRenewEnd(TargetedCastRD rd)

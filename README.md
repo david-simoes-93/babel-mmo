@@ -81,8 +81,8 @@ There are many things to add:
 - Add containers (dockerfiles)
 
 Bugs:
-- Fix Mage casting animation (not resetting on death)
 - Balance bosses for 4 players
+- It's possible for a client to connect while server is starting-up, which causes a duplicate player to show up
 - Many others, surely
 
 ## Want to contribute?

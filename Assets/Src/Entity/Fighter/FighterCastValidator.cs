@@ -195,21 +195,21 @@ internal class FighterCastValidator : BaseCastValidator
         {
             case CastCode.Spin:
 #if !UNITY_SERVER
-                //
+                ClientSpin(rd);
 #else
                 ServerSpin(rd);
 #endif
                 break;
             case CastCode.FighterAttackLeft:
 #if !UNITY_SERVER
-                //
+                ClientAttackLeft(rd);
 #else
                 ServerAttackLeft(rd);
 #endif
                 break;
             case CastCode.FighterAttackRight:
 #if !UNITY_SERVER
-                //
+                ClientAttackRight(rd);
 #else
                 ServerAttackRight(rd);
 #endif
@@ -357,6 +357,22 @@ internal class FighterCastValidator : BaseCastValidator
     }
 
     /// <summary>
+    /// Client-side call. Fighter casts a Spin
+    /// </summary>
+    /// <param name="rd">the Spin cast</param>
+    private void ClientSpin(CastRD rd)
+    {
+        List<UnitEntity> collidedTargets = CollisionChecker.CheckExplosionRadius(cameraTarget_.transform.position, kSpinRadius, gameObject_);
+
+        foreach (UnitEntity otherChar in collidedTargets)
+        {
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
+                new GenericTemporaryEffect(otherChar.TargetingTransform.position, Quaternion.identity, 0.5f, Globals.kFighterHitPrefab, 1000)
+            );
+        }
+    }
+
+    /// <summary>
     /// Server-side call. Fighter casts a Spin
     /// </summary>
     /// <param name="rd">the Spin cast</param>
@@ -368,6 +384,25 @@ internal class FighterCastValidator : BaseCastValidator
         {
             otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, kSpinDamage));
             GameDebug.Log("Spin: " + otherChar.Name + " @ " + otherChar.Health);
+        }
+    }
+
+    /// <summary>
+    /// Client-side call. Fighter casts an FighterAttackLeft
+    /// </summary>
+    /// <param name="rd">the FighterAttackLeft cast</param>
+    private void ClientAttackLeft(CastRD rd)
+    {
+        UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = CollisionChecker.CheckCollisionForwardOnEnemies(
+            cameraTarget_.transform.position,
+            kAttackLeftRange,
+            gameObject_
+        );
+
+        if (collidedTarget != null)
+        {
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new GenericTemporaryEffect(collisionPoint, Quaternion.identity, 0.3f, Globals.kFighterHitPrefab, 1000));
         }
     }
 
@@ -387,6 +422,25 @@ internal class FighterCastValidator : BaseCastValidator
         {
             collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kAttackLeftDamage));
             GameDebug.Log("FighterAttackLeft: " + collidedTarget.Name + " @ " + collidedTarget.Health);
+        }
+    }
+
+    /// <summary>
+    /// Client-side call. Fighter casts an FighterAttackRight
+    /// </summary>
+    /// <param name="rd">the FighterAttackRight cast</param>
+    private void ClientAttackRight(CastRD rd)
+    {
+        UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = CollisionChecker.CheckCollisionForwardOnEnemies(
+            cameraTarget_.transform.position,
+            kAttackRightRange,
+            gameObject_
+        );
+
+        if (collidedTarget != null)
+        {
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new GenericTemporaryEffect(collisionPoint, Quaternion.identity, 0.5f, Globals.kFighterHitPrefab, 1000));
         }
     }
 

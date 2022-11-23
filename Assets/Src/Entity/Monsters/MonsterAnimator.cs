@@ -12,11 +12,10 @@ internal class MonsterAnimator : BaseAnimator
     }
 
     /// <summary>
-    /// Called by SetAnimatorState() to set unit-specific states
+    /// Called by SetAnimatorState() to set unit-specific states, based on controller state
     /// </summary>
-    /// <param name="state"></param>
     /// <returns>true if EntityAnimation was set correctly</returns>
-    internal override bool SpecificSetAnimatorState(EntityAnimation state)
+    internal override bool SpecificSetAnimatorState()
     {
         return false;
     }

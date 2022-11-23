@@ -336,8 +336,10 @@ internal class UnitEntity : Entity
     /// </summary>
     private void SetProperCharacterState()
     {
+        GameDebug.Log("SetProperCharacterState");
         if (IsDead)
         {
+            GameDebug.Log("DEAD");
             Controller.TransitionToState(CharacterState.Dead);
         }
         else if (LeashedBy != null)
