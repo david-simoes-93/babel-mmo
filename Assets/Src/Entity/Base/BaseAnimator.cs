@@ -84,6 +84,13 @@ internal abstract class BaseAnimator
 #endif
     }
 
+    /// <summary>
+    /// Sets the typical animator state of Idle/WalkForward/Left/Right/Back used by most unit entities. At most one input should be true
+    /// </summary>
+    /// <param name="moveFront"></param>
+    /// <param name="moveLeft"></param>
+    /// <param name="moveRight"></param>
+    /// <param name="moveBack"></param>
     internal void setBasicMovementAnimationState(bool moveFront, bool moveLeft, bool moveRight, bool moveBack)
     {
         if (moveFront)
