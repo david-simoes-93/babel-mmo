@@ -87,41 +87,8 @@ Bugs:
 
 ## Want to contribute?
 
-Consider joining our [Discord](https://discord.gg/TypvwNW) channel, or emailing me.
+Consider joining our [Discord](https://discord.gg/TypvwNW) channel, or emailing me at david.simoes@ua.pt .
 
-Install [Unity](https://store.unity.com/download), [Git](https://git-scm.com/download/win), and [Git LFS](https://git-lfs.github.com/). Use Git Bash for everything from now on.
-
-Set up your account and name with
-
-    git config --global user.email "bluemoon93"
-	git config --global user.name "David"
-    git clone https://gitlab.com/bluemoon93/babel
+Install [Unity](https://store.unity.com/download), [Git](https://git-scm.com/download/win), and [Git LFS](https://git-lfs.github.com/).
 	
-Open Unity and `Open` the folder `babel` you just created. `File` > `Open Scene` > `Scenes/Map_Arena.unity` should get you playing.
-
-----
-
-Always work within your own branch, not on master. Merges will be handled later. To check your branch
-
-    git branch
-	
-If it says `master`, you either have not created and branch, or have not switched to it.
-
-    git branch david-new-feature
-	git checkout david-new-feature
-
-When you add new files, decide whether they should be in Git or Git LFS (basically, anything graphical and large should go on LFS). At the moment, it's `Materials`, `Scenes`, and `Resources`. If your files should go on LFS,
-
-    git lfs track Assets/Materials*
-	
-Regardless of whether your files go on LFS or not, you now add them and commit your changes
-
-    git add Assets/Materials*
-	git commit -m "Added Materials folder"
-	
-Check if all files have been added and everything is correct, and push your files into your branch in the repository
-
-    git status
-	git push origin david-new-feature
-	
-You can then check if everything is working, and ask for a merge onto the `master` branch.
+Open Unity and `Open` the folder `babel` you just created. `File` > `Build` > `Server build`, include all three scenes given (InitialScene, MainMenu, NorseMap) and enable the `x64 Server Build` option. After building, run the server. Then `File` > `Open Scene` > `Scenes/InitialScene.unity` should get you playing on the client.
