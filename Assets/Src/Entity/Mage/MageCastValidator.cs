@@ -415,7 +415,6 @@ internal class MageCastValidator : BaseCastValidator
     /// <param name="rd">the Fireflash cast</param>
     private void ClientFireflash(TargetedCastRD rd)
     {
-        // TODO make proper fire flash on target
         UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
         UnitEntity target = parent_.EntityManager.FindUnitEntityByUid(rd.target_uid);
         if (source == null || target == null)
@@ -448,7 +447,6 @@ internal class MageCastValidator : BaseCastValidator
     /// <param name="rd">the Frosbolt cast</param>
     private void ClientFrostflash(TargetedCastRD rd)
     {
-        // TODO make proper frost flash on target
         UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
         UnitEntity target = parent_.EntityManager.FindUnitEntityByUid(rd.target_uid);
         if (source == null || target == null)
@@ -481,7 +479,6 @@ internal class MageCastValidator : BaseCastValidator
     /// <param name="rd">the Arcaneflash cast</param>
     private void ClientArcaneflash(TargetedCastRD rd)
     {
-        // TODO make proper arcane flash on target
         UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
         UnitEntity target = parent_.EntityManager.FindUnitEntityByUid(rd.target_uid);
         if (source == null || target == null)
@@ -490,6 +487,9 @@ internal class MageCastValidator : BaseCastValidator
         }
         ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
             new LaserEffect(source.TargetingTransform.position, target.TargetingTransform.position, 0.01f, Color.magenta)
+        );
+        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
+            new GenericTemporaryEffect(target.TargetingTransform.position, Quaternion.identity, 0.5f, Globals.kArcaneflashPrefab, 1000)
         );
     }
 

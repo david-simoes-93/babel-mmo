@@ -102,6 +102,7 @@ internal class Globals
     internal static GameObject kSniperWeaponShotgun = Resources.Load("Prefabs/SniperWeaponShotgun") as GameObject;
     internal static GameObject kSniperWeaponMedigun = Resources.Load("Prefabs/SniperWeaponMedigun") as GameObject;
     internal static GameObject kFighterHitPrefab = Resources.Load("Prefabs/FighterHit") as GameObject;
+    internal static GameObject kArcaneflashPrefab = Resources.Load("Prefabs/Arcaneflash") as GameObject;
 
     // Effects
     internal static GameObject kPoisonZonePrefab = Resources.Load("Prefabs/PoisonZone") as GameObject;
