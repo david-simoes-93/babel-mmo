@@ -172,20 +172,31 @@ internal class MageCastValidator : BaseCastValidator
                 break;
             case CastCode.MagePyroblast:
 #if !UNITY_SERVER
-                ClientPyroblastEnd(rd as TargetedCastRD);
+                //
 #else
                 ServerPyroblastEnd(rd as TargetedCastRD);
 #endif
                 break;
             case CastCode.MageRenew:
 #if !UNITY_SERVER
-                ClientRenewEnd(rd as TargetedCastRD);
+                //
 #else
                 ServerRenewEnd(rd as TargetedCastRD);
 #endif
                 break;
             case CastCode.MagePyroblastEnd:
+#if !UNITY_SERVER
+                ClientPyroblastEnd(rd as TargetedCastRD);
+#else
+                //
+#endif
+                break;
             case CastCode.MageRenewEnd:
+#if !UNITY_SERVER
+                ClientRenewEnd(rd as TargetedCastRD);
+#else
+                //
+#endif
                 break;
             case CastCode.MageCastStop:
                 break;
@@ -544,12 +555,11 @@ internal class MageCastValidator : BaseCastValidator
     }
 
     /// <summary>
-    /// Server-side call. Mage finishes casting  a Renew
+    /// Server-side call. Mage finishes casting a Renew
     /// </summary>
     /// <param name="rd">the Renew cast</param>
     private void ClientRenewEnd(TargetedCastRD rd)
     {
-        // TODO make proper pyroblast chasing target
         UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
         UnitEntity target = parent_.EntityManager.FindUnitEntityByUid(rd.target_uid);
         if (source == null || target == null)
@@ -562,7 +572,7 @@ internal class MageCastValidator : BaseCastValidator
     }
 
     /// <summary>
-    /// Server-side call. Mage finishes casting  a Renew
+    /// Server-side call. Mage finishes casting a Renew
     /// </summary>
     /// <param name="rd">the Renew cast</param>
     private void ServerRenewEnd(TargetedCastRD rd)
