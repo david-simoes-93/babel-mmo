@@ -34,9 +34,6 @@ internal struct PlayerCharacterInputs
     internal bool JumpDown;
     internal bool CrouchDown;
     internal bool CrouchUp;
-    //internal bool ChargingDown;
-    //internal bool AttackL, AttackR, Spin;
-    //internal bool DodgeL, DodgeR, DodgeF, DodgeB;
 }
 
 /// <summary>

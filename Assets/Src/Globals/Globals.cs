@@ -16,7 +16,13 @@ internal class Globals
         DodgeBack,
         FighterAttackLeft,
         FighterAttackRight,
-        Spin,
+        FighterSpin,
+        FighterLifestealWeak,
+        FighterLifestealWeakHeal,
+        FighterLifestealStrong,
+        FighterLifestealStrongHeal,
+        FighterQuickAttacks,
+        FighterSlowAttacks,
         SniperWeaponRifleFire,
         SniperWeaponRifleAlternate,
         SniperWeaponShotgunFire,
@@ -66,7 +72,9 @@ internal class Globals
             || val == CastCode.SniperWeaponMedigunFire
             || val == CastCode.SniperWeaponMedigunAlternate
             || val == CastCode.MageRenew
-            || val == CastCode.MageRenewEnd;
+            || val == CastCode.MageRenewEnd
+            || val == CastCode.FighterLifestealWeakHeal
+            || val == CastCode.FighterLifestealStrongHeal;
     }
 
     internal static long currTime_ms;
@@ -102,6 +110,7 @@ internal class Globals
     internal static GameObject kSniperWeaponShotgun = Resources.Load("Prefabs/SniperWeaponShotgun") as GameObject;
     internal static GameObject kSniperWeaponMedigun = Resources.Load("Prefabs/SniperWeaponMedigun") as GameObject;
     internal static GameObject kFighterHitPrefab = Resources.Load("Prefabs/FighterHit") as GameObject;
+    internal static GameObject kFighterHealPrefab = Resources.Load("Prefabs/FighterHit") as GameObject;
     internal static GameObject kArcaneflashPrefab = Resources.Load("Prefabs/Arcaneflash") as GameObject;
     internal static GameObject kSniperMuzzleRiflePrefab = Resources.Load("Prefabs/SniperMuzzleRifle") as GameObject;
     internal static GameObject kMonsterHitPrefab = Resources.Load("Prefabs/MonsterHit") as GameObject;
