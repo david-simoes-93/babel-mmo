@@ -124,6 +124,7 @@ internal class Globals
     internal static GameObject kChargeStunPrefab = Resources.Load("Prefabs/ChargeStun") as GameObject;
     internal static GameObject kFireflashDotPrefab = Resources.Load("Prefabs/FireflashDot") as GameObject;
     internal static GameObject kFrostflashSlowPrefab = Resources.Load("Prefabs/FrostflashSlow") as GameObject;
+    internal static GameObject kQuickAttacksDotPrefab = Resources.Load("Prefabs/QuickAttacksDot") as GameObject;
 
     // Monsters
     internal static GameObject kFreyjaPrefab = Resources.Load("Prefabs/Freyja") as GameObject;
@@ -193,7 +194,7 @@ internal class Globals
         { BuffEntityCode.kChargeDebuff, kChargeStunPrefab },
         { BuffEntityCode.kFireflashDebuff, kFireflashDotPrefab },
         { BuffEntityCode.kFrostflashDebuff, kFrostflashSlowPrefab },
-        { BuffEntityCode.kQuickAttacksDebuff, kFireflashDotPrefab },
+        { BuffEntityCode.kQuickAttacksDebuff, kQuickAttacksDotPrefab },
         { BuffEntityCode.kSlowAttacksDebuff, kFrostflashSlowPrefab }
     };
 
