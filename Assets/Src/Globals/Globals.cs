@@ -161,7 +161,9 @@ internal class Globals
     {
         kChargeDebuff,
         kFireflashDebuff,
-        kFrostflashDebuff
+        kFrostflashDebuff,
+        kQuickAttacksDebuff,
+        kSlowAttacksDebuff
     };
 
     internal static Dictionary<UnitEntityCode, GameObject> UnitEntityCodes = new Dictionary<UnitEntityCode, GameObject>
@@ -190,7 +192,9 @@ internal class Globals
     {
         { BuffEntityCode.kChargeDebuff, kChargeStunPrefab },
         { BuffEntityCode.kFireflashDebuff, kFireflashDotPrefab },
-        { BuffEntityCode.kFrostflashDebuff, kFrostflashSlowPrefab }
+        { BuffEntityCode.kFrostflashDebuff, kFrostflashSlowPrefab },
+        { BuffEntityCode.kQuickAttacksDebuff, kFireflashDotPrefab },
+        { BuffEntityCode.kSlowAttacksDebuff, kFrostflashSlowPrefab }
     };
 
     internal static Dictionary<UnitEntityCode, Action<UnitEntity>> UnitEntityScripts = new Dictionary<UnitEntityCode, Action<UnitEntity>>
@@ -215,7 +219,9 @@ internal class Globals
     {
         { BuffEntityCode.kChargeDebuff, AddComponent<ChargeDebuffScript> },
         { BuffEntityCode.kFireflashDebuff, AddComponent<FireflashDebuffScript> },
-        { BuffEntityCode.kFrostflashDebuff, AddComponent<FrostflashDebuffScript> }
+        { BuffEntityCode.kFrostflashDebuff, AddComponent<FrostflashDebuffScript> },
+        { BuffEntityCode.kQuickAttacksDebuff, AddComponent<FireflashDebuffScript> },
+        { BuffEntityCode.kSlowAttacksDebuff, AddComponent<FrostflashDebuffScript> }
     };
 
     internal enum EntityAnimation

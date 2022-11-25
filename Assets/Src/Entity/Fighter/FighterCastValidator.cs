@@ -290,16 +290,16 @@ internal class FighterCastValidator : BaseCastValidator
                 break;
             case CastCode.FighterQuickAttacks:
 #if !UNITY_SERVER
-                //ClientQuickAttacks(rd);
+                ClientQuickAttacks(rd);
 #else
-                //ServerQuickAttacks(rd);
+                ServerQuickAttacks(rd);
 #endif
                 break;
             case CastCode.FighterSlowAttacks:
 #if !UNITY_SERVER
-                //ClientSlowAttacks(rd);
+                ClientSlowAttacks(rd);
 #else
-                //ServerSlowAttacks(rd);
+                ServerSlowAttacks(rd);
 #endif
                 break;
             case CastCode.FighterCharge:
@@ -619,6 +619,68 @@ internal class FighterCastValidator : BaseCastValidator
             collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kLifestealStrong.kDamage));
             parent_.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, parent_.Uid, CastCode.FighterLifestealStrongHeal, kLifestealStrong.kDamage));
             GameDebug.Log("FighterLifestealStrong: " + collidedTarget.Name + " @ " + collidedTarget.Health);
+        }
+    }
+
+    /// <summary>
+    /// Client-side call. Fighter casts a FighterQuickAttacks
+    /// </summary>
+    /// <param name="rd">the FighterQuickAttacks cast</param>
+    private void ClientQuickAttacks(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kQuickAttacks);
+        if (collidedTarget != null)
+        {
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new GenericTemporaryEffect(collisionPoint, Quaternion.identity, 0.25f, Globals.kFighterHitPrefab, 1000));
+        }
+    }
+
+    /// <summary>
+    /// Server-side call. Fighter casts a FighterQuickAttacks
+    /// </summary>
+    /// <param name="rd">the FighterQuickAttacks cast</param>
+    private void ServerQuickAttacks(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kQuickAttacks);
+
+        if (collidedTarget != null)
+        {
+            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kQuickAttacks.kDamage));
+            collidedTarget.EntityManager.AsyncCreateTempEvent(
+                new BuffRD(collidedTarget.EntityManager.GetValidNpcUid(), parent_.Uid, collidedTarget.Uid, Globals.BuffEntityCode.kQuickAttacksDebuff)
+            );
+            GameDebug.Log("FighterQuickAttacks: " + collidedTarget.Name + " @ " + collidedTarget.Health);
+        }
+    }
+
+    /// <summary>
+    /// Client-side call. Fighter casts a FighterSlowAttacks
+    /// </summary>
+    /// <param name="rd">the FighterSlowAttacks cast</param>
+    private void ClientSlowAttacks(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kSlowAttacks);
+        if (collidedTarget != null)
+        {
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new GenericTemporaryEffect(collisionPoint, Quaternion.identity, 0.4f, Globals.kFighterHitPrefab, 1000));
+        }
+    }
+
+    /// <summary>
+    /// Server-side call. Fighter casts a FighterSlowAttacks
+    /// </summary>
+    /// <param name="rd">the FighterSlowAttacks cast</param>
+    private void ServerSlowAttacks(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kSlowAttacks);
+
+        if (collidedTarget != null)
+        {
+            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kSlowAttacks.kDamage));
+            collidedTarget.EntityManager.AsyncCreateTempEvent(
+                new BuffRD(collidedTarget.EntityManager.GetValidNpcUid(), parent_.Uid, collidedTarget.Uid, Globals.BuffEntityCode.kSlowAttacksDebuff)
+            );
+            GameDebug.Log("FighterSlowAttacks: " + collidedTarget.Name + " @ " + collidedTarget.Health);
         }
     }
 
