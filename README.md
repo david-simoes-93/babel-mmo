@@ -20,7 +20,7 @@ When players ascend to the next floor, a copy of their character is made that as
 For server health, we would want to keep a decent amount of players per floor. Because most players accumulate on the top floors, we would probably have lower floors with a single server, and top floors with multiple ones. Players could choose their server per floor, and once the maximum floor changed (as more floors are added), servers would be merged. Bots could also be considered to fill events requiring a specific amount of people (like the 50-player arena on Floor 1). It is important to keep the amount of servers fluid: react quickly to player-base trends, split and merge as necessary.
 
 What classes are there in Babel?
-- The Fighter: third person camera, plays similarly to a JRPG, with simple controls but complex combos. The fighter acts like a melee brawler or warrior, having high health and dealing good melee single target damage. The fighter is also able to enter a defensive stance, dealing less damage, but also healing himself and taking reduced damage.
+- The Fighter: third person camera, plays similarly to a JRPG, with simple controls but complex combos. The fighter acts like a melee brawler or warrior, having high health and dealing good melee single target damage. The fighter is also able to enter a defensive stance, dealing less damage, but also healing himself and taking reduced damage. Currently, Fighter has a Charge attack, a Dodge ability, and 5 combos (Spinning, 2x Lifesteal, Bleed, and Restrain).
 - The Sniper: first person camera, plays similarly to a FPS, with simple controls and high-skill ceiling. The sniper is a ranged attacker with long, medium, and close range options. The sniper might also heal himself or his allies with a medi-gun.
 - The Strategist: third person camera, plays similarly to a MOBA, with simple controls but complex combos. The strategist is an AoE attacker with short and medium range directional abilities. He excels at controlling the battlefield (freezing enemies, shielding allies, creating physical barriers, pushing targets away).
 - The Mage: third person camera, plays similarly to an MMO, with complex controls. The mage is a ranged attacker with long and medium range options. The mage targets his enemies/allies and casts spells (some helpful, others harmful) at them, often having low mobility.
@@ -76,7 +76,7 @@ There are many things to add:
 - Rework animations. Legs and torso should be separate, such that movement doesn't affect punches or other anymations.
 - Implement a friendly NPC system, who could be interacted with as a vendor or quest giver
 - Implement more skills and talents for all classes
-- Make things pretty (we're just adding the same laser over and over, and using colored circles for visual effects)
+- Make things prettier
 - Add CI: unit and integration tests
 - Add containers (dockerfiles)
 

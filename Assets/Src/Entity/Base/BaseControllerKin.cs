@@ -34,9 +34,6 @@ internal struct PlayerCharacterInputs
     internal bool JumpDown;
     internal bool CrouchDown;
     internal bool CrouchUp;
-    //internal bool ChargingDown;
-    //internal bool AttackL, AttackR, Spin;
-    //internal bool DodgeL, DodgeR, DodgeF, DodgeB;
 }
 
 /// <summary>
@@ -92,7 +89,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
     protected Vector3 defaultCapsuleDimentions_;
     protected BaseCastValidator baseValidator_;
     protected EntityManager em_;
-    protected float _moveSpeedModifier = 0.0f; // [-1, +inf]
+    protected float _moveSpeedModifier = 0.0f; // [-inf, +inf]
 
     /// <summary>
     /// Called by SetInputs() for specific class
@@ -484,6 +481,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
                     // See if we actually are allowed to jump
                     if (
                         !_jumpConsumed
+                        && _moveSpeedModifier > -1
                         && (
                             (AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround)
                             || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime
@@ -511,7 +509,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
                         _jumpedThisFrame = true;
                     }
                     // See if we actually are allowed to jump
-                    else if (DoubleJumpEnabled && !_doubleJumpConsumed && !Motor.GroundingStatus.IsStableOnGround)
+                    else if (DoubleJumpEnabled && _moveSpeedModifier > -1 && !_doubleJumpConsumed && !Motor.GroundingStatus.IsStableOnGround)
                     {
                         // Calculate jump direction before ungrounding
                         Vector3 jumpDirection = Motor.CharacterUp;

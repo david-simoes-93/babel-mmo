@@ -16,7 +16,14 @@ internal class Globals
         DodgeBack,
         FighterAttackLeft,
         FighterAttackRight,
-        Spin,
+        FighterSpin,
+        FighterLifestealWeak,
+        FighterLifestealWeakHeal,
+        FighterLifestealStrong,
+        FighterLifestealStrongHeal,
+        FighterQuickAttacks,
+        FighterQuickAttacksTick,
+        FighterSlowAttacks,
         SniperWeaponRifleFire,
         SniperWeaponRifleAlternate,
         SniperWeaponShotgunFire,
@@ -66,7 +73,9 @@ internal class Globals
             || val == CastCode.SniperWeaponMedigunFire
             || val == CastCode.SniperWeaponMedigunAlternate
             || val == CastCode.MageRenew
-            || val == CastCode.MageRenewEnd;
+            || val == CastCode.MageRenewEnd
+            || val == CastCode.FighterLifestealWeakHeal
+            || val == CastCode.FighterLifestealStrongHeal;
     }
 
     internal static long currTime_ms;
@@ -102,6 +111,7 @@ internal class Globals
     internal static GameObject kSniperWeaponShotgun = Resources.Load("Prefabs/SniperWeaponShotgun") as GameObject;
     internal static GameObject kSniperWeaponMedigun = Resources.Load("Prefabs/SniperWeaponMedigun") as GameObject;
     internal static GameObject kFighterHitPrefab = Resources.Load("Prefabs/FighterHit") as GameObject;
+    internal static GameObject kFighterHealPrefab = Resources.Load("Prefabs/FighterLifesteal") as GameObject;
     internal static GameObject kArcaneflashPrefab = Resources.Load("Prefabs/Arcaneflash") as GameObject;
     internal static GameObject kSniperMuzzleRiflePrefab = Resources.Load("Prefabs/SniperMuzzleRifle") as GameObject;
     internal static GameObject kMonsterHitPrefab = Resources.Load("Prefabs/MonsterHit") as GameObject;
@@ -115,6 +125,8 @@ internal class Globals
     internal static GameObject kChargeStunPrefab = Resources.Load("Prefabs/ChargeStun") as GameObject;
     internal static GameObject kFireflashDotPrefab = Resources.Load("Prefabs/FireflashDot") as GameObject;
     internal static GameObject kFrostflashSlowPrefab = Resources.Load("Prefabs/FrostflashSlow") as GameObject;
+    internal static GameObject kSlowAttacksDotPrefab = Resources.Load("Prefabs/SlowAttacksDot") as GameObject;
+    internal static GameObject kQuickAttacksRestrainPrefab = Resources.Load("Prefabs/QuickAttacksRestrain") as GameObject;
 
     // Monsters
     internal static GameObject kFreyjaPrefab = Resources.Load("Prefabs/Freyja") as GameObject;
@@ -152,7 +164,9 @@ internal class Globals
     {
         kChargeDebuff,
         kFireflashDebuff,
-        kFrostflashDebuff
+        kFrostflashDebuff,
+        kQuickAttacksDebuff,
+        kSlowAttacksDebuff
     };
 
     internal static Dictionary<UnitEntityCode, GameObject> UnitEntityCodes = new Dictionary<UnitEntityCode, GameObject>
@@ -181,7 +195,9 @@ internal class Globals
     {
         { BuffEntityCode.kChargeDebuff, kChargeStunPrefab },
         { BuffEntityCode.kFireflashDebuff, kFireflashDotPrefab },
-        { BuffEntityCode.kFrostflashDebuff, kFrostflashSlowPrefab }
+        { BuffEntityCode.kFrostflashDebuff, kFrostflashSlowPrefab },
+        { BuffEntityCode.kQuickAttacksDebuff, kQuickAttacksRestrainPrefab },
+        { BuffEntityCode.kSlowAttacksDebuff, kSlowAttacksDotPrefab }
     };
 
     internal static Dictionary<UnitEntityCode, Action<UnitEntity>> UnitEntityScripts = new Dictionary<UnitEntityCode, Action<UnitEntity>>
@@ -206,7 +222,9 @@ internal class Globals
     {
         { BuffEntityCode.kChargeDebuff, AddComponent<ChargeDebuffScript> },
         { BuffEntityCode.kFireflashDebuff, AddComponent<FireflashDebuffScript> },
-        { BuffEntityCode.kFrostflashDebuff, AddComponent<FrostflashDebuffScript> }
+        { BuffEntityCode.kFrostflashDebuff, AddComponent<FrostflashDebuffScript> },
+        { BuffEntityCode.kQuickAttacksDebuff, AddComponent<QuickAttacksDebuffScript> },
+        { BuffEntityCode.kSlowAttacksDebuff, AddComponent<SlowAttacksDebuffScript> }
     };
 
     internal enum EntityAnimation

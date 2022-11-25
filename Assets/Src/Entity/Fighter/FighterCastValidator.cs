@@ -18,12 +18,37 @@ internal class FighterCastValidator : BaseCastValidator
     private CastCode[] comboCounter_ = { CastCode.None, CastCode.None, CastCode.None, CastCode.None, CastCode.None };
 
     internal const int kComboBreakTime = 500;
-    internal const int kAttackLeftCooldown = 1000,
-        kAttackLeftRange = 2,
-        kAttackLeftDamage = 20;
-    internal const int kAttackRightCooldown = 2000,
-        kAttackRightRange = 2,
-        kAttackRightDamage = 40;
+
+    internal class AttackInfo
+    {
+        // AttackInfo is for typical vector attacks (such as AttackLeft and AttackRight)
+        internal AttackInfo(int cd, int rng, int dmg)
+        {
+            kCooldown = cd;
+            kRange = rng;
+            kDamage = dmg;
+        }
+
+        // combo pieces that don't have CD
+        internal AttackInfo(int rng, int dmg)
+        {
+            kCooldown = 0;
+            kRange = rng;
+            kDamage = dmg;
+        }
+
+        internal readonly int kCooldown,
+            kRange,
+            kDamage;
+    }
+
+    internal readonly AttackInfo kAttackLeft = new AttackInfo(1000, 2, 20);
+    internal readonly AttackInfo kAttackRight = new AttackInfo(2000, 3, 40);
+    internal readonly AttackInfo kLifestealWeak = new AttackInfo(2, 15);
+    internal readonly AttackInfo kLifestealStrong = new AttackInfo(3, 35);
+    internal readonly AttackInfo kQuickAttacks = new AttackInfo(2, 10);
+    internal readonly AttackInfo kSlowAttacks = new AttackInfo(3, 50);
+
     internal const int kSpinLength = 600,
         kSpinRadius = 4,
         kSpinDamage = 15;
@@ -33,7 +58,7 @@ internal class FighterCastValidator : BaseCastValidator
         kDodgeSpeed = 30;
     internal const float kDodgeLength_s = 0.15f;
 
-    internal readonly static CastCode[] kComboSpin1 =
+    internal readonly static CastCode[] kComboSpin =
     {
         CastCode.FighterAttackLeft,
         CastCode.FighterAttackRight,
@@ -41,18 +66,17 @@ internal class FighterCastValidator : BaseCastValidator
         CastCode.FighterAttackRight,
         CastCode.FighterAttackLeft
     };
-    internal readonly static CastCode[] kComboSpin2 =
-    {
-        CastCode.FighterAttackRight,
-        CastCode.FighterAttackLeft,
-        CastCode.FighterAttackRight,
-        CastCode.FighterAttackLeft,
-        CastCode.FighterAttackRight
-    };
+    internal readonly static CastCode[] kComboLifestealStrong = { CastCode.FighterAttackLeft, CastCode.FighterAttackLeft, CastCode.FighterAttackRight };
+    internal readonly static CastCode[] kComboLifestealWeak = { CastCode.FighterAttackRight, CastCode.FighterAttackRight, CastCode.FighterAttackLeft };
+    internal readonly static CastCode[] kComboQuickAttacks = { CastCode.FighterAttackLeft, CastCode.FighterAttackLeft, CastCode.FighterAttackLeft };
+    internal readonly static CastCode[] kComboSlowattacks = { CastCode.FighterAttackRight, CastCode.FighterAttackRight, CastCode.FighterAttackRight };
     internal readonly static Tuple<CastCode, CastCode[]>[] kCombos =
     {
-        new Tuple<CastCode, CastCode[]>(CastCode.Spin, kComboSpin1),
-        new Tuple<CastCode, CastCode[]>(CastCode.Spin, kComboSpin2)
+        new Tuple<CastCode, CastCode[]>(CastCode.FighterSpin, kComboSpin),
+        new Tuple<CastCode, CastCode[]>(CastCode.FighterLifestealWeak, kComboLifestealWeak),
+        new Tuple<CastCode, CastCode[]>(CastCode.FighterLifestealStrong, kComboLifestealStrong),
+        new Tuple<CastCode, CastCode[]>(CastCode.FighterQuickAttacks, kComboQuickAttacks),
+        new Tuple<CastCode, CastCode[]>(CastCode.FighterSlowAttacks, kComboSlowattacks)
     };
 
     private FighterCanvas fighterGui_;
@@ -109,13 +133,45 @@ internal class FighterCastValidator : BaseCastValidator
 
         switch (cd)
         {
-            case CastCode.Spin:
+            case CastCode.FighterSpin:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterSpin);
                 delayedEvents_.Add(currTime_ms + 300, rd);
                 delayedEvents_.Add(currTime_ms + 700, rd);
 
                 timeOfLastSpin_ = currTime_ms;
-                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeftCooldown;
+                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeft.kCooldown;
+                break;
+            case CastCode.FighterLifestealWeak:
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackLeft);
+                delayedEvents_.Add(currTime_ms + 200, rd);
+
+                timeOfLastAttackLeft_ = currTime_ms;
+                timeOfLastAttack_ = timeOfLastAttackLeft_;
+                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeft.kCooldown;
+                break;
+            case CastCode.FighterLifestealStrong:
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackRight);
+                delayedEvents_.Add(currTime_ms + 400, rd);
+
+                timeOfLastAttackRight_ = currTime_ms;
+                timeOfLastAttack_ = timeOfLastAttackRight_;
+                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackRight.kCooldown;
+                break;
+            case CastCode.FighterSlowAttacks:
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackRight);
+                delayedEvents_.Add(currTime_ms + 400, rd);
+
+                timeOfLastAttackRight_ = currTime_ms;
+                timeOfLastAttack_ = timeOfLastAttackRight_;
+                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackRight.kCooldown;
+                break;
+            case CastCode.FighterQuickAttacks:
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackLeft);
+                delayedEvents_.Add(currTime_ms + 200, rd);
+
+                timeOfLastAttackLeft_ = currTime_ms;
+                timeOfLastAttack_ = timeOfLastAttackLeft_;
+                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeft.kCooldown;
                 break;
             case CastCode.FighterAttackLeft:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackLeft);
@@ -123,8 +179,8 @@ internal class FighterCastValidator : BaseCastValidator
 
                 timeOfLastAttackLeft_ = currTime_ms;
                 timeOfLastAttack_ = timeOfLastAttackLeft_;
-                lastAttackCooldown = kAttackLeftCooldown;
-                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeftCooldown;
+                lastAttackCooldown = kAttackLeft.kCooldown;
+                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeft.kCooldown;
                 break;
             case CastCode.FighterAttackRight:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackRight);
@@ -132,8 +188,8 @@ internal class FighterCastValidator : BaseCastValidator
 
                 timeOfLastAttackRight_ = currTime_ms;
                 timeOfLastAttack_ = timeOfLastAttackRight_;
-                lastAttackCooldown = kAttackRightCooldown;
-                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackRightCooldown;
+                lastAttackCooldown = kAttackRight.kCooldown;
+                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackRight.kCooldown;
                 break;
             case CastCode.FighterCharge:
                 timeOfLastCharge_ = currTime_ms;
@@ -147,7 +203,6 @@ internal class FighterCastValidator : BaseCastValidator
                 ServerChargeStun(rd as TargetedCastRD);
 #endif
                 chargeHasStunned_ = true;
-
                 break;
             case CastCode.DodgeBack:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeBack);
@@ -175,7 +230,6 @@ internal class FighterCastValidator : BaseCastValidator
         }
 
 #if !UNITY_SERVER
-        // Actual client's controller, not the controller of other entities
         if (parent_.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
         {
             ShiftCombo(cd);
@@ -191,13 +245,19 @@ internal class FighterCastValidator : BaseCastValidator
     /// <returns>true if CastRD was processed correctly</returns>
     internal override bool SpecificProcessDelayedCast(CastRD rd)
     {
+        // no need to check rd.type, just return if we're not in control anymore
+        if (!EntityInControl(rd))
+        {
+            return true;
+        }
+
         switch (rd.type)
         {
-            case CastCode.Spin:
+            case CastCode.FighterSpin:
 #if !UNITY_SERVER
-                ClientSpin(rd);
+                ClientFighterSpin(rd);
 #else
-                ServerSpin(rd);
+                ServerFighterSpin(rd);
 #endif
                 break;
             case CastCode.FighterAttackLeft:
@@ -212,6 +272,34 @@ internal class FighterCastValidator : BaseCastValidator
                 ClientAttackRight(rd);
 #else
                 ServerAttackRight(rd);
+#endif
+                break;
+            case CastCode.FighterLifestealWeak:
+#if !UNITY_SERVER
+                ClientLifestealWeak(rd);
+#else
+                ServerLifestealWeak(rd);
+#endif
+                break;
+            case CastCode.FighterLifestealStrong:
+#if !UNITY_SERVER
+                ClientLifestealStrong(rd);
+#else
+                ServerLifestealStrong(rd);
+#endif
+                break;
+            case CastCode.FighterQuickAttacks:
+#if !UNITY_SERVER
+                ClientQuickAttacks(rd);
+#else
+                ServerQuickAttacks(rd);
+#endif
+                break;
+            case CastCode.FighterSlowAttacks:
+#if !UNITY_SERVER
+                ClientSlowAttacks(rd);
+#else
+                ServerSlowAttacks(rd);
 #endif
                 break;
             case CastCode.FighterCharge:
@@ -254,15 +342,23 @@ internal class FighterCastValidator : BaseCastValidator
 
         // shift and add new cast
         ShiftCombo(rd.type);
-        //GameDebug.Log(comboCounter[0]+" "+ comboCounter[1] + " " + comboCounter[2] + " " + comboCounter[3] + " " + comboCounter[4]);
+        // GameDebug.Log(comboCounter_[0] + " " + comboCounter_[1] + " " + comboCounter_[2] + " " + comboCounter_[3] + " " + comboCounter_[4]);
 
         //if combo
         foreach (Tuple<CastCode, CastCode[]> combo in kCombos)
         {
-            if (Enumerable.SequenceEqual(comboCounter_, combo.Item2))
+            bool validCombo = true;
+            for (int idx = 1; idx <= comboCounter_.Length && idx <= combo.Item2.Length; ++idx)
             {
-                comboCounter_ = new CastCode[] { CastCode.None, CastCode.None, CastCode.None, CastCode.None, CastCode.None };
-                timeWhenLastAttackCooldownEnded_ = 0;
+                if (comboCounter_[comboCounter_.Length - idx] != combo.Item2[combo.Item2.Length - idx])
+                {
+                    validCombo = false;
+                    break;
+                }
+            }
+
+            if (validCombo)
+            {
                 rd.type = combo.Item1;
                 return;
             }
@@ -337,8 +433,18 @@ internal class FighterCastValidator : BaseCastValidator
     /// <param name="cd">the new cast</param>
     private void ShiftCombo(CastCode cd)
     {
-        if (cd != CastCode.FighterAttackLeft && cd != CastCode.FighterAttackRight && cd != CastCode.Spin)
+        if (
+            cd != CastCode.FighterAttackLeft
+            && cd != CastCode.FighterAttackRight
+            && cd != CastCode.FighterSpin
+            && cd != CastCode.FighterLifestealWeak
+            && cd != CastCode.FighterLifestealStrong
+            && cd != CastCode.FighterQuickAttacks
+            && cd != CastCode.FighterSlowAttacks
+        )
+        {
             return;
+        }
 
         int lastIndex = comboCounter_.Length - 1;
         // shift and add new cast
@@ -357,10 +463,10 @@ internal class FighterCastValidator : BaseCastValidator
     }
 
     /// <summary>
-    /// Client-side call. Fighter casts a Spin
+    /// Client-side call. Fighter casts a FighterSpin
     /// </summary>
-    /// <param name="rd">the Spin cast</param>
-    private void ClientSpin(CastRD rd)
+    /// <param name="rd">the FighterSpin cast</param>
+    private void ClientFighterSpin(CastRD rd)
     {
         List<UnitEntity> collidedTargets = CollisionChecker.CheckExplosionRadius(cameraTarget_.transform.position, kSpinRadius, gameObject_);
 
@@ -373,18 +479,23 @@ internal class FighterCastValidator : BaseCastValidator
     }
 
     /// <summary>
-    /// Server-side call. Fighter casts a Spin
+    /// Server-side call. Fighter casts a FighterSpin
     /// </summary>
-    /// <param name="rd">the Spin cast</param>
-    private void ServerSpin(CastRD rd)
+    /// <param name="rd">the FighterSpin cast</param>
+    private void ServerFighterSpin(CastRD rd)
     {
         List<UnitEntity> collidedTargets = CollisionChecker.CheckExplosionRadius(cameraTarget_.transform.position, kSpinRadius, gameObject_);
 
         foreach (UnitEntity otherChar in collidedTargets)
         {
             otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, kSpinDamage));
-            GameDebug.Log("Spin: " + otherChar.Name + " @ " + otherChar.Health);
+            GameDebug.Log("FighterSpin: " + otherChar.Name + " @ " + otherChar.Health);
         }
+    }
+
+    private (UnitEntity, Vector3) VectorAttack(AttackInfo atk)
+    {
+        return CollisionChecker.CheckCollisionForwardOnEnemies(cameraTarget_.transform.position, atk.kRange, gameObject_);
     }
 
     /// <summary>
@@ -393,12 +504,7 @@ internal class FighterCastValidator : BaseCastValidator
     /// <param name="rd">the FighterAttackLeft cast</param>
     private void ClientAttackLeft(CastRD rd)
     {
-        UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
-        (UnitEntity collidedTarget, Vector3 collisionPoint) = CollisionChecker.CheckCollisionForwardOnEnemies(
-            cameraTarget_.transform.position,
-            kAttackLeftRange,
-            gameObject_
-        );
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kAttackLeft);
 
         if (collidedTarget != null)
         {
@@ -412,15 +518,11 @@ internal class FighterCastValidator : BaseCastValidator
     /// <param name="rd">the FighterAttackLeft cast</param>
     private void ServerAttackLeft(CastRD rd)
     {
-        (UnitEntity collidedTarget, Vector3 collisionPoint) = CollisionChecker.CheckCollisionForwardOnEnemies(
-            cameraTarget_.transform.position,
-            kAttackLeftRange,
-            gameObject_
-        );
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kAttackLeft);
 
         if (collidedTarget != null)
         {
-            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kAttackLeftDamage));
+            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kAttackLeft.kDamage));
             GameDebug.Log("FighterAttackLeft: " + collidedTarget.Name + " @ " + collidedTarget.Health);
         }
     }
@@ -431,12 +533,7 @@ internal class FighterCastValidator : BaseCastValidator
     /// <param name="rd">the FighterAttackRight cast</param>
     private void ClientAttackRight(CastRD rd)
     {
-        UnitEntity source = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
-        (UnitEntity collidedTarget, Vector3 collisionPoint) = CollisionChecker.CheckCollisionForwardOnEnemies(
-            cameraTarget_.transform.position,
-            kAttackRightRange,
-            gameObject_
-        );
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kAttackRight);
 
         if (collidedTarget != null)
         {
@@ -450,16 +547,138 @@ internal class FighterCastValidator : BaseCastValidator
     /// <param name="rd">the FighterAttackRight cast</param>
     private void ServerAttackRight(CastRD rd)
     {
-        (UnitEntity collidedTarget, Vector3 collisionPoint) = CollisionChecker.CheckCollisionForwardOnEnemies(
-            cameraTarget_.transform.position,
-            kAttackRightRange,
-            gameObject_
-        );
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kAttackRight);
 
         if (collidedTarget != null)
         {
-            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kAttackRightDamage));
+            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kAttackRight.kDamage));
             GameDebug.Log("FighterAttackRight: " + collidedTarget.Name + " @ " + collidedTarget.Health);
+        }
+    }
+
+    /// <summary>
+    /// Client-side call. Fighter casts a FighterLifestealWeak
+    /// </summary>
+    /// <param name="rd">the FighterLifestealWeak cast</param>
+    private void ClientLifestealWeak(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kLifestealWeak);
+        if (collidedTarget != null)
+        {
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new GenericTemporaryEffect(collisionPoint, Quaternion.identity, 0.2f, Globals.kFighterHitPrefab, 1000));
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
+                new GenericTemporaryEffect(parent_.TargetingTransform.position, Quaternion.identity, 0.2f, Globals.kFighterHealPrefab, 1000)
+            );
+        }
+    }
+
+    /// <summary>
+    /// Server-side call. Fighter casts a FighterLifestealWeak
+    /// </summary>
+    /// <param name="rd">the FighterLifestealWeak cast</param>
+    private void ServerLifestealWeak(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kLifestealWeak);
+
+        if (collidedTarget != null)
+        {
+            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kLifestealWeak.kDamage));
+            parent_.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, parent_.Uid, CastCode.FighterLifestealWeakHeal, kLifestealWeak.kDamage));
+            GameDebug.Log("FighterLifestealWeak: " + collidedTarget.Name + " @ " + collidedTarget.Health);
+        }
+    }
+
+    /// <summary>
+    /// Client-side call. Fighter casts a FighterLifestealStrong
+    /// </summary>
+    /// <param name="rd">the FighterLifestealStrong cast</param>
+    private void ClientLifestealStrong(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kLifestealStrong);
+        if (collidedTarget != null)
+        {
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new GenericTemporaryEffect(collisionPoint, Quaternion.identity, 0.4f, Globals.kFighterHitPrefab, 1000));
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
+                new GenericTemporaryEffect(parent_.TargetingTransform.position, Quaternion.identity, 0.4f, Globals.kFighterHealPrefab, 1000)
+            );
+        }
+    }
+
+    /// <summary>
+    /// Server-side call. Fighter casts a FighterLifestealStrong
+    /// </summary>
+    /// <param name="rd">the FighterLifestealStrong cast</param>
+    private void ServerLifestealStrong(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kLifestealStrong);
+
+        if (collidedTarget != null)
+        {
+            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kLifestealStrong.kDamage));
+            parent_.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, parent_.Uid, CastCode.FighterLifestealStrongHeal, kLifestealStrong.kDamage));
+            GameDebug.Log("FighterLifestealStrong: " + collidedTarget.Name + " @ " + collidedTarget.Health);
+        }
+    }
+
+    /// <summary>
+    /// Client-side call. Fighter casts a FighterQuickAttacks
+    /// </summary>
+    /// <param name="rd">the FighterQuickAttacks cast</param>
+    private void ClientQuickAttacks(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kQuickAttacks);
+        if (collidedTarget != null)
+        {
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new GenericTemporaryEffect(collisionPoint, Quaternion.identity, 0.25f, Globals.kFighterHitPrefab, 1000));
+        }
+    }
+
+    /// <summary>
+    /// Server-side call. Fighter casts a FighterQuickAttacks
+    /// </summary>
+    /// <param name="rd">the FighterQuickAttacks cast</param>
+    private void ServerQuickAttacks(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kQuickAttacks);
+
+        if (collidedTarget != null)
+        {
+            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kQuickAttacks.kDamage));
+            collidedTarget.EntityManager.AsyncCreateTempEvent(
+                new BuffRD(collidedTarget.EntityManager.GetValidNpcUid(), parent_.Uid, collidedTarget.Uid, Globals.BuffEntityCode.kQuickAttacksDebuff)
+            );
+            GameDebug.Log("FighterQuickAttacks: " + collidedTarget.Name + " @ " + collidedTarget.Health);
+        }
+    }
+
+    /// <summary>
+    /// Client-side call. Fighter casts a FighterSlowAttacks
+    /// </summary>
+    /// <param name="rd">the FighterSlowAttacks cast</param>
+    private void ClientSlowAttacks(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kSlowAttacks);
+        if (collidedTarget != null)
+        {
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new GenericTemporaryEffect(collisionPoint, Quaternion.identity, 0.4f, Globals.kFighterHitPrefab, 1000));
+        }
+    }
+
+    /// <summary>
+    /// Server-side call. Fighter casts a FighterSlowAttacks
+    /// </summary>
+    /// <param name="rd">the FighterSlowAttacks cast</param>
+    private void ServerSlowAttacks(CastRD rd)
+    {
+        (UnitEntity collidedTarget, Vector3 collisionPoint) = VectorAttack(kSlowAttacks);
+
+        if (collidedTarget != null)
+        {
+            collidedTarget.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, collidedTarget.Uid, rd.type, kSlowAttacks.kDamage));
+            collidedTarget.EntityManager.AsyncCreateTempEvent(
+                new BuffRD(collidedTarget.EntityManager.GetValidNpcUid(), parent_.Uid, collidedTarget.Uid, Globals.BuffEntityCode.kSlowAttacksDebuff)
+            );
+            GameDebug.Log("FighterSlowAttacks: " + collidedTarget.Name + " @ " + collidedTarget.Health);
         }
     }
 

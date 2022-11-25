@@ -147,6 +147,8 @@ internal class MageCastValidator : BaseCastValidator
     /// <returns>true if CastRD was processed correctly</returns>
     internal override bool SpecificProcessDelayedCast(CastRD rd)
     {
+        // all casts are either instant or channeled (they check for validity on their own), so we dont do any EntityInControl checks
+
         switch (rd.type)
         {
             case CastCode.MageFireflash:

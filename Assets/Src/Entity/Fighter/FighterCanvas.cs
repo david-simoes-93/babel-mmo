@@ -9,6 +9,10 @@ internal class FighterCanvas : BaseCanvas
         SpellCharge_,
         SpellDodge_;
     private Sprite ComboSpin_,
+        ComboLifestealWeak_,
+        ComboLifestealStrong_,
+        ComboQuickAttacks_,
+        ComboSlowAttacks_,
         ComboEmpty_;
     private Text HpText_;
     private Image HpBar_;
@@ -41,6 +45,10 @@ internal class FighterCanvas : BaseCanvas
 
         var comboSpritesTransform = transform.Find("ComboSprites");
         ComboSpin_ = comboSpritesTransform.Find("Spin").GetComponent<Image>().sprite;
+        ComboLifestealWeak_ = comboSpritesTransform.Find("Lifesteal").GetComponent<Image>().sprite;
+        ComboLifestealStrong_ = comboSpritesTransform.Find("Lifesteal").GetComponent<Image>().sprite;
+        ComboQuickAttacks_ = comboSpritesTransform.Find("QuickAttacks").GetComponent<Image>().sprite;
+        ComboSlowAttacks_ = comboSpritesTransform.Find("SlowAttacks").GetComponent<Image>().sprite;
         ComboEmpty_ = comboSpritesTransform.Find("Empty").GetComponent<Image>().sprite;
     }
 
@@ -133,8 +141,20 @@ internal class FighterCanvas : BaseCanvas
             case Globals.CastCode.FighterAttackRight:
                 Combo_[index].sprite = SpellAttackRight_.sprite;
                 break;
-            case Globals.CastCode.Spin:
+            case Globals.CastCode.FighterSpin:
                 Combo_[index].sprite = ComboSpin_;
+                break;
+            case Globals.CastCode.FighterLifestealWeak:
+                Combo_[index].sprite = ComboLifestealWeak_;
+                break;
+            case Globals.CastCode.FighterLifestealStrong:
+                Combo_[index].sprite = ComboLifestealStrong_;
+                break;
+            case Globals.CastCode.FighterQuickAttacks:
+                Combo_[index].sprite = ComboQuickAttacks_;
+                break;
+            case Globals.CastCode.FighterSlowAttacks:
+                Combo_[index].sprite = ComboSlowAttacks_;
                 break;
             default:
                 break;
