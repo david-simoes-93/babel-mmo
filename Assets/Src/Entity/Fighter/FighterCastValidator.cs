@@ -142,20 +142,20 @@ internal class FighterCastValidator : BaseCastValidator
                 timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeft.kCooldown;
                 break;
             case CastCode.FighterLifestealWeak:
-                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackRight);
-                delayedEvents_.Add(currTime_ms + 400, rd);
-
-                timeOfLastAttackRight_ = currTime_ms;
-                timeOfLastAttack_ = timeOfLastAttackRight_;
-                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackRight.kCooldown;
-                break;
-            case CastCode.FighterLifestealStrong:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackLeft);
                 delayedEvents_.Add(currTime_ms + 200, rd);
 
                 timeOfLastAttackLeft_ = currTime_ms;
                 timeOfLastAttack_ = timeOfLastAttackLeft_;
                 timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackLeft.kCooldown;
+                break;
+            case CastCode.FighterLifestealStrong:
+                parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackRight);
+                delayedEvents_.Add(currTime_ms + 400, rd);
+
+                timeOfLastAttackRight_ = currTime_ms;
+                timeOfLastAttack_ = timeOfLastAttackRight_;
+                timeWhenLastAttackCooldownEnded_ = currTime_ms + kAttackRight.kCooldown;
                 break;
             case CastCode.FighterSlowAttacks:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterAttackRight);
