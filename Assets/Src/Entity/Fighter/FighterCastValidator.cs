@@ -342,7 +342,7 @@ internal class FighterCastValidator : BaseCastValidator
 
         // shift and add new cast
         ShiftCombo(rd.type);
-        GameDebug.Log(comboCounter_[0] + " " + comboCounter_[1] + " " + comboCounter_[2] + " " + comboCounter_[3] + " " + comboCounter_[4]);
+        // GameDebug.Log(comboCounter_[0] + " " + comboCounter_[1] + " " + comboCounter_[2] + " " + comboCounter_[3] + " " + comboCounter_[4]);
 
         //if combo
         foreach (Tuple<CastCode, CastCode[]> combo in kCombos)
@@ -359,8 +359,6 @@ internal class FighterCastValidator : BaseCastValidator
 
             if (validCombo)
             {
-                // comboCounter_ = new CastCode[] { CastCode.None, CastCode.None, CastCode.None, CastCode.None, CastCode.None };
-                // timeWhenLastAttackCooldownEnded_ = 0;
                 rd.type = combo.Item1;
                 return;
             }
