@@ -125,8 +125,8 @@ internal class Globals
     internal static GameObject kChargeStunPrefab = Resources.Load("Prefabs/ChargeStun") as GameObject;
     internal static GameObject kFireflashDotPrefab = Resources.Load("Prefabs/FireflashDot") as GameObject;
     internal static GameObject kFrostflashSlowPrefab = Resources.Load("Prefabs/FrostflashSlow") as GameObject;
-    internal static GameObject kQuickAttacksDotPrefab = Resources.Load("Prefabs/QuickAttacksDot") as GameObject;
-    internal static GameObject kSlowAttacksRestrainPrefab = Resources.Load("Prefabs/SlowAttacksRestrain") as GameObject;
+    internal static GameObject kSlowAttacksDotPrefab = Resources.Load("Prefabs/SlowAttacksDot") as GameObject;
+    internal static GameObject kQuickAttacksRestrainPrefab = Resources.Load("Prefabs/QuickAttacksRestrain") as GameObject;
 
     // Monsters
     internal static GameObject kFreyjaPrefab = Resources.Load("Prefabs/Freyja") as GameObject;
@@ -196,8 +196,8 @@ internal class Globals
         { BuffEntityCode.kChargeDebuff, kChargeStunPrefab },
         { BuffEntityCode.kFireflashDebuff, kFireflashDotPrefab },
         { BuffEntityCode.kFrostflashDebuff, kFrostflashSlowPrefab },
-        { BuffEntityCode.kQuickAttacksDebuff, kQuickAttacksDotPrefab },
-        { BuffEntityCode.kSlowAttacksDebuff, kSlowAttacksRestrainPrefab }
+        { BuffEntityCode.kQuickAttacksDebuff, kQuickAttacksRestrainPrefab },
+        { BuffEntityCode.kSlowAttacksDebuff, kSlowAttacksDotPrefab }
     };
 
     internal static Dictionary<UnitEntityCode, Action<UnitEntity>> UnitEntityScripts = new Dictionary<UnitEntityCode, Action<UnitEntity>>
