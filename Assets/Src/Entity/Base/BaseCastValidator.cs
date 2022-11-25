@@ -77,6 +77,12 @@ internal abstract class BaseCastValidator
         return Math.Abs(motor_.TransientPosition.x) > 1000 || Math.Abs(motor_.TransientPosition.y) > 1000 || Math.Abs(motor_.TransientPosition.z) > 1000;
     }
 
+    protected bool EntityInControl(CastRD rd)
+    {
+        UnitEntity caster = parent_.EntityManager.FindUnitEntityByUid(rd.caster_uid);
+        return caster != null && !caster.IsDead && !caster.IsStunned;
+    }
+
     /// <summary>
     /// Configures the local variables the Validator will use
     /// </summary>

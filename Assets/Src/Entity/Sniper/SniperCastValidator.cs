@@ -610,6 +610,14 @@ internal class SniperCastValidator : BaseCastValidator
     /// <returns>true if CastRD was processed correctly</returns>
     internal override bool SpecificProcessDelayedCast(CastRD rd)
     {
+        if (rd.type == CastCode.SniperWeaponRifleAlternate)
+        {
+            if (!EntityInControl(rd))
+            {
+                return true;
+            }
+        }
+
         switch (rd.type)
         {
             case SniperWeaponRifleAlternate:

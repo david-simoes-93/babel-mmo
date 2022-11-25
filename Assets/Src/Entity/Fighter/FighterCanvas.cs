@@ -45,10 +45,10 @@ internal class FighterCanvas : BaseCanvas
 
         var comboSpritesTransform = transform.Find("ComboSprites");
         ComboSpin_ = comboSpritesTransform.Find("Spin").GetComponent<Image>().sprite;
-        ComboLifestealWeak_ = comboSpritesTransform.Find("Spin").GetComponent<Image>().sprite;
-        ComboLifestealStrong_ = comboSpritesTransform.Find("Spin").GetComponent<Image>().sprite;
-        ComboQuickAttacks_ = comboSpritesTransform.Find("Spin").GetComponent<Image>().sprite;
-        ComboSlowAttacks_ = comboSpritesTransform.Find("Spin").GetComponent<Image>().sprite;
+        ComboLifestealWeak_ = comboSpritesTransform.Find("Lifesteal").GetComponent<Image>().sprite;
+        ComboLifestealStrong_ = comboSpritesTransform.Find("Lifesteal").GetComponent<Image>().sprite;
+        ComboQuickAttacks_ = comboSpritesTransform.Find("QuickAttacks").GetComponent<Image>().sprite;
+        ComboSlowAttacks_ = comboSpritesTransform.Find("SlowAttacks").GetComponent<Image>().sprite;
         ComboEmpty_ = comboSpritesTransform.Find("Empty").GetComponent<Image>().sprite;
     }
 

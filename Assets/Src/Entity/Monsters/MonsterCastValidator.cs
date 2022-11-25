@@ -151,6 +151,19 @@ internal class MonsterCastValidator : BaseCastValidator
     /// <returns>true if CastRD was processed correctly</returns>
     internal override bool SpecificProcessDelayedCast(CastRD rd)
     {
+        if (
+            rd.type == CastCode.MonsterAttackLeft
+            || rd.type == CastCode.MonsterAttackRight
+            || rd.type == CastCode.MonsterRangedAttack
+            || rd.type == CastCode.ThorChainLightning
+        )
+        {
+            if (!EntityInControl(rd))
+            {
+                return true;
+            }
+        }
+
         switch (rd.type)
         {
             case CastCode.MonsterAttackLeft:
@@ -161,6 +174,7 @@ internal class MonsterCastValidator : BaseCastValidator
 #endif
                 break;
             case CastCode.MonsterAttackRight:
+                // not implemented
 #if !UNITY_SERVER
                 //
 #else
@@ -256,7 +270,7 @@ internal class MonsterCastValidator : BaseCastValidator
             return;
         }
         ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
-            new GenericTemporaryEffect(target.TargetingTransform.position, Quaternion.identity, 0.5f, Globals.kMonsterHitPrefab, 1000)
+            new GenericTemporaryEffect(target.TargetingTransform.position, Quaternion.identity, 0.2f, Globals.kMonsterHitPrefab, 1000)
         );
     }
 

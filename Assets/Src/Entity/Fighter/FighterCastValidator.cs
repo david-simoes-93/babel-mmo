@@ -66,8 +66,8 @@ internal class FighterCastValidator : BaseCastValidator
         CastCode.FighterAttackRight,
         CastCode.FighterAttackLeft
     };
-    internal readonly static CastCode[] kComboLifestealWeak = { CastCode.FighterAttackLeft, CastCode.FighterAttackLeft, CastCode.FighterAttackRight };
-    internal readonly static CastCode[] kComboLifestealStrong = { CastCode.FighterAttackRight, CastCode.FighterAttackRight, CastCode.FighterAttackLeft };
+    internal readonly static CastCode[] kComboLifestealStrong = { CastCode.FighterAttackLeft, CastCode.FighterAttackLeft, CastCode.FighterAttackRight };
+    internal readonly static CastCode[] kComboLifestealWeak = { CastCode.FighterAttackRight, CastCode.FighterAttackRight, CastCode.FighterAttackLeft };
     internal readonly static CastCode[] kComboQuickAttacks = { CastCode.FighterAttackLeft, CastCode.FighterAttackLeft, CastCode.FighterAttackLeft };
     internal readonly static CastCode[] kComboSlowattacks = { CastCode.FighterAttackRight, CastCode.FighterAttackRight, CastCode.FighterAttackRight };
     internal readonly static Tuple<CastCode, CastCode[]>[] kCombos =
@@ -203,7 +203,6 @@ internal class FighterCastValidator : BaseCastValidator
                 ServerChargeStun(rd as TargetedCastRD);
 #endif
                 chargeHasStunned_ = true;
-
                 break;
             case CastCode.DodgeBack:
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kFighterDodgeBack);
@@ -231,7 +230,6 @@ internal class FighterCastValidator : BaseCastValidator
         }
 
 #if !UNITY_SERVER
-        // Actual client's controller, not the controller of other entities
         if (parent_.Uid == ClientGameLoop.CGL.UnitEntity.Uid)
         {
             ShiftCombo(cd);
@@ -247,6 +245,12 @@ internal class FighterCastValidator : BaseCastValidator
     /// <returns>true if CastRD was processed correctly</returns>
     internal override bool SpecificProcessDelayedCast(CastRD rd)
     {
+        // no need to check rd.type, just return if we're not in control anymore
+        if (!EntityInControl(rd))
+        {
+            return true;
+        }
+
         switch (rd.type)
         {
             case CastCode.FighterSpin:
