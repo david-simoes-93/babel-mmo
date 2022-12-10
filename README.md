@@ -89,6 +89,6 @@ Bugs:
 
 Consider joining our [Discord](https://discord.gg/TypvwNW) channel, or emailing me at david.simoes@ua.pt .
 
-Install [Unity](https://store.unity.com/download), [Git](https://git-scm.com/download/win), and [Git LFS](https://git-lfs.github.com/).
+Install [Unity](https://store.unity.com/download), [Git](https://git-scm.com/download/win), and [Git LFS](https://git-lfs.github.com/). Previous Babel repository on [GitLab](https://gitlab.com/bluemoon93/babel).
 	
 Open Unity and `Open` the folder `babel` you just created. `File` > `Build` > `Server build`, include all three scenes given (InitialScene, MainMenu, NorseMap) and enable the `x64 Server Build` option. After building, run the server. Then `File` > `Open Scene` > `Scenes/InitialScene.unity` should get you playing on the client.
