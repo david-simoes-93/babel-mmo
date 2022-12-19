@@ -51,7 +51,7 @@ internal class SniperControllerKin : BaseControllerKin
             case CharacterState.SniperCrouching:
             {
                 // Move and look inputs
-                _moveInputVector = cameraPlanarRotation * moveInputVector;
+                _moveInputVector = Vector3.zero;
                 _lookInputVector = cameraPlanarDirection;
 
                 if (inputs.CrouchUp)

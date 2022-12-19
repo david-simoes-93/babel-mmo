@@ -8,12 +8,12 @@ internal class MonsterCastValidator : BaseCastValidator
 
     internal const int kAttackLeftCooldown = 1000,
         kAttackLeftRange = 4,
-        kAttackLeftDamage = 10;
+        kAttackLeftDamage = 7;
     internal const int kAttackRightCooldown = 2000,
         kAttackRightRange = 2,
         kAttackRightDamage = 20;
     internal const int kRangedAttackCooldown = 1000,
-        kRangedAttackRange = 9,
+        kRangedAttackRange = 8,
         kRangedAttackDamage = 5;
 
     /// <summary>

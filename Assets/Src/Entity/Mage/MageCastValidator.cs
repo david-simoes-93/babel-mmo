@@ -124,6 +124,7 @@ internal class MageCastValidator : BaseCastValidator
                 parent_.UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kMageChannelEnd);
                 channelingSpell = CastCode.None;
                 controller_.TransitionToState(CharacterState.Default);
+                delayedEvents_.Add(currTime_ms, rd);
                 break;
             case CastCode.MageCastStop:
                 channelingSpell = CastCode.None;
@@ -499,9 +500,6 @@ internal class MageCastValidator : BaseCastValidator
             return;
         }
         ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
-            new LaserEffect(source.TargetingTransform.position, target.TargetingTransform.position, 0.01f, Color.magenta)
-        );
-        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
             new GenericTemporaryEffect(target.TargetingTransform.position, Quaternion.identity, 0.5f, Globals.kArcaneflashPrefab, 1000)
         );
     }
@@ -533,6 +531,7 @@ internal class MageCastValidator : BaseCastValidator
         {
             return;
         }
+        GameDebug.Log("lser");
         ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(source.TargetingTransform.position, target.TargetingTransform.position, 0.005f, Color.red));
     }
 
@@ -568,9 +567,7 @@ internal class MageCastValidator : BaseCastValidator
         {
             return;
         }
-        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(
-            new LaserEffect(source.TargetingTransform.position, target.TargetingTransform.position, 0.005f, Color.green)
-        );
+        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(source.TargetingTransform.position, target.TargetingTransform.position, 0.01f, Color.green));
     }
 
     /// <summary>

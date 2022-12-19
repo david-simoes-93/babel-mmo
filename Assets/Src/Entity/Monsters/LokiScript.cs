@@ -173,8 +173,8 @@ internal class LokiScript : MonoBehaviour, IConfigurableMonster
                         cloneUid,
                         "Loki (Clone)",
                         UnitEntityCode.kLokiClone,
-                        (int)(0.1f * parent_.MaxHealth),
-                        (int)(0.1f * parent_.MaxHealth),
+                        (int)(0.05f * parent_.MaxHealth),
+                        (int)(0.05f * parent_.MaxHealth),
                         spawn_point_ + new Vector3(random_.Next(-10, 10), 0, random_.Next(-10, 10)),
                         transform.rotation,
                         0

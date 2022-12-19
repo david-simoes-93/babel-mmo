@@ -266,6 +266,9 @@ internal class UnitEntity : Entity
         if (IsDead)
         {
             UnitAnimator.SetAnimatorTrigger(EntityAnimationTrigger.kDeath);
+            SetLeash(null, Vector3.zero);
+            SetInvulnerable(false);
+            SetTargetable(true);
 #if !UNITY_SERVER
             if (Type == UnitEntityCode.kSniper)
             {
