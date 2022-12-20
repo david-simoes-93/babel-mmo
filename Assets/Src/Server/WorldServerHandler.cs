@@ -100,7 +100,7 @@ internal class WorldServerHandler
         Vector3 pos = new Vector3(-20, 2, -7);
         Quaternion ori = Quaternion.identity;
         string playerName = "pName" + uid_.ToString();
-        SpawnRD newPlayerEvent = new SpawnRD(uid_, playerName, unit_type_, 10, 100, pos, ori, 0);
+        SpawnRD newPlayerEvent = new SpawnRD(uid_, playerName, unit_type_, 95, 100, pos, ori, 0);
         gameWorld_.EntityManager.AsyncCreateTempEvent(newPlayerEvent);
         NetworkStreamUtils.sendBytes(networkStream_, newPlayerEvent.ToBytes());
     }
