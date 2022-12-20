@@ -531,7 +531,6 @@ internal class MageCastValidator : BaseCastValidator
         {
             return;
         }
-        GameDebug.Log("lser");
         ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(source.TargetingTransform.position, target.TargetingTransform.position, 0.005f, Color.red));
     }
 

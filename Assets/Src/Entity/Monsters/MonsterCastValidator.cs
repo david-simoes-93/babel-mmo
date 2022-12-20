@@ -13,8 +13,8 @@ internal class MonsterCastValidator : BaseCastValidator
         kAttackRightRange = 2,
         kAttackRightDamage = 20;
     internal const int kRangedAttackCooldown = 1000,
-        kRangedAttackRange = 8,
-        kRangedAttackDamage = 5;
+        kRangedAttackRange = 9,
+        kRangedAttackDamage = 3;
 
     /// <summary>
     /// Called by Validate() to determine validity of a class-specific CastRD (ability not in cooldown, valid targets, etc)

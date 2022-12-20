@@ -83,6 +83,7 @@ There are many things to add:
 Bugs:
 - Balance bosses for 4 players
 - It's possible for a client to connect while server is starting-up, which causes a duplicate player to show up
+- Valkyries sometimes don't drop players and they get stuck in midair
 - Many others, surely
 
 ## Want to contribute?

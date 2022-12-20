@@ -104,6 +104,7 @@ internal class Globals
     // Client Side Effects
     internal static GameObject kCombatTextPrefab = Resources.Load("Prefabs/CombatText") as GameObject;
     internal static GameObject kLaserPrefab = Resources.Load("Prefabs/Laser") as GameObject;
+    internal static GameObject kCylinderPrefab = Resources.Load("Prefabs/Cylinder") as GameObject;
     internal static GameObject kExplosionPrefab = Resources.Load("Prefabs/Volumetric") as GameObject;
     internal static GameObject kFireflashPrefab = Resources.Load("Prefabs/Fireflash") as GameObject;
     internal static GameObject kLightningStrikePrefab = Resources.Load("Prefabs/LightningStrike") as GameObject;

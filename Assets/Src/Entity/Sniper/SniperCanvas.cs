@@ -23,6 +23,9 @@ internal class SniperCanvas : BaseCanvas
     private List<CombatText2D> currDmgMessagesRight_ = new List<CombatText2D>();
     private SniperCastValidator validator_;
 
+    private List<Image> poisonFx_ = new List<Image>();
+    private float currentPoisonAlpha = 0;
+
     /// <summary>
     /// Start is called before the first frame update
     /// </summary>
@@ -48,6 +51,15 @@ internal class SniperCanvas : BaseCanvas
         AlertAnchor_ = transform.Find("AlertAnchor").gameObject;
         CombatDamageLeft_ = transform.Find("CombatDamageLeft").gameObject;
         CombatDamageRight_ = transform.Find("CombatDamageRight").gameObject;
+
+        var PoisonZoneUiFxTransform = transform.Find("PoisonZoneUiFx");
+        string[] poisonFxNames = { "Down", "Up", "Left", "Right" };
+        foreach (string name in poisonFxNames)
+        {
+            var ImageComponent = PoisonZoneUiFxTransform.Find(name);
+            poisonFx_.Add(ImageComponent.GetComponent<Image>());
+        }
+        UpdatePoisonZoneFxAlpha();
     }
 
     /// <summary>
@@ -90,6 +102,8 @@ internal class SniperCanvas : BaseCanvas
         weaponMedigun_.fillAmount = 1 - validator_.CooldownWeaponMedigun();
         weaponMedigunAmmo_.text =
             validator_.currAmmoMedigun_.ToString() + "/" + SniperCastValidator.weapon_configs[CastCode.SniperChooseWeaponMedigun].kMaxAmmo.ToString();
+
+        UpdatePoisonZoneFxAlpha();
     }
 
     /// <summary>
@@ -190,55 +204,97 @@ internal class SniperCanvas : BaseCanvas
     {
         if (rd.target_uid == parent_.Uid)
         {
-            Entity source;
-            if (rd.effect_source_uid == parent_.Uid)
-                source = parent_;
-            else
-                source = ClientGameLoop.CGL.GameWorld.EntityManager.FindEntityByUid(rd.effect_source_uid);
-
-            if (currDmgMessagesRight_.Count > 0 && currDmgMessagesRight_[0].remote_entity_.Uid == source.Uid && currDmgMessagesRight_[0].cast_ == rd.effect_source_type)
-            {
-                currDmgMessagesRight_[0].UpdateDamage(rd.value, IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow);
-            }
-            else
-            {
-                CombatText2D cmbtText = new CombatText2D(
-                    source,
-                    rd.value,
-                    IsHealingSpell(rd.effect_source_type) ? Color.green : Color.red,
-                    CombatDamageRight_.transform,
-                    rd.effect_source_type
-                );
-                currDmgMessagesRight_.Insert(0, cmbtText);
-            }
+            AddSelfCombatEffect(rd);
         }
         else
         {
-            DamageIndicator_.SetActive(true);
-            damageIndicatorFrameCounter_ = 0;
+            AddExternalCombatEffect(rd, target);
+        }
+    }
 
-            // If WeaponRifleAlternate's explosion
-            if (rd.effect_source_type == CastCode.SniperWeaponRifleAlternate)
-            {
-                FloatingText3D cmbtText = new FloatingText3D(target.TargetingTransform.position, rd.value.ToString(), 1000, Color.yellow);
-                ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(cmbtText);
-            }
+    /// <summary>
+    /// adds local graphical fx for stuff happening to the sniper
+    /// </summary>
+    /// <param name="rd">the cause of the FX</param>
+    private void AddSelfCombatEffect(CombatEffectRD rd)
+    {
+        Entity source;
+        if (rd.effect_source_uid == parent_.Uid)
+            source = parent_;
+        else
+            source = ClientGameLoop.CGL.GameWorld.EntityManager.FindEntityByUid(rd.effect_source_uid);
 
-            if (currDmgMessagesLeft_.Count > 0 && currDmgMessagesLeft_[0].remote_entity_.Uid == target.Uid && currDmgMessagesLeft_[0].cast_ == rd.effect_source_type)
+        if (currDmgMessagesRight_.Count > 0 && currDmgMessagesRight_[0].remote_entity_.Uid == source.Uid && currDmgMessagesRight_[0].cast_ == rd.effect_source_type)
+        {
+            currDmgMessagesRight_[0].UpdateDamage(rd.value, IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow);
+        }
+        else
+        {
+            CombatText2D cmbtText = new CombatText2D(
+                source,
+                rd.value,
+                IsHealingSpell(rd.effect_source_type) ? Color.green : Color.red,
+                CombatDamageRight_.transform,
+                rd.effect_source_type
+            );
+            currDmgMessagesRight_.Insert(0, cmbtText);
+        }
+
+        if (rd.effect_source_type == CastCode.FreyjaPoisonZoneTick)
+        {
+            currentPoisonAlpha += 0.3f;
+            if (currentPoisonAlpha > 1)
             {
-                currDmgMessagesLeft_[0].UpdateDamage(rd.value, IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow);
+                currentPoisonAlpha = 1;
             }
-            else
-            {
-                CombatText2D cmbtText = new CombatText2D(
-                    target,
-                    rd.value,
-                    IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow,
-                    CombatDamageLeft_.transform,
-                    rd.effect_source_type
-                );
-                currDmgMessagesLeft_.Insert(0, cmbtText);
-            }
+        }
+    }
+
+    /// <summary>
+    /// adds local graphical fx for stuff happening other entities, not the sniper
+    /// </summary>
+    /// <param name="rd">the cause of the FX</param>
+    /// <param name="target">the target's UnitEntity</param>
+    private void AddExternalCombatEffect(CombatEffectRD rd, UnitEntity target)
+    {
+        DamageIndicator_.SetActive(true);
+        damageIndicatorFrameCounter_ = 0;
+
+        // If WeaponRifleAlternate's explosion
+        if (rd.effect_source_type == CastCode.SniperWeaponRifleAlternate)
+        {
+            FloatingText3D cmbtText = new FloatingText3D(target.TargetingTransform.position, rd.value.ToString(), 1000, Color.yellow);
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(cmbtText);
+        }
+
+        if (currDmgMessagesLeft_.Count > 0 && currDmgMessagesLeft_[0].remote_entity_.Uid == target.Uid && currDmgMessagesLeft_[0].cast_ == rd.effect_source_type)
+        {
+            currDmgMessagesLeft_[0].UpdateDamage(rd.value, IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow);
+        }
+        else
+        {
+            CombatText2D cmbtText = new CombatText2D(
+                target,
+                rd.value,
+                IsHealingSpell(rd.effect_source_type) ? Color.green : Color.yellow,
+                CombatDamageLeft_.transform,
+                rd.effect_source_type
+            );
+            currDmgMessagesLeft_.Insert(0, cmbtText);
+        }
+    }
+
+    private void UpdatePoisonZoneFxAlpha()
+    {
+        currentPoisonAlpha -= 0.01f;
+        if (currentPoisonAlpha < 0)
+        {
+            currentPoisonAlpha = 0;
+        }
+
+        foreach (var poisonImage in poisonFx_)
+        {
+            poisonImage.color = new Color(1f, 1f, 1f, currentPoisonAlpha);
         }
     }
 }

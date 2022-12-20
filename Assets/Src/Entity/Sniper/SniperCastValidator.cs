@@ -703,10 +703,7 @@ internal class SniperCastValidator : BaseCastValidator
             collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[SniperChooseWeaponRifle].kLeftRange;
         }
 
-        if (parent_.Uid != ClientGameLoop.CGL.UnitEntity.Uid)
-        {
-            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(rd.pos, collisionPoint, 0.01f, Color.yellow));
-        }
+        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(rd.pos + rd.ori * new Vector3(0.10f, -0.22f, 1.0f), collisionPoint, 0.01f, Color.yellow));
     }
 
     /// <summary>
@@ -810,10 +807,7 @@ internal class SniperCastValidator : BaseCastValidator
                 collisionPoint = rd.pos + rd.ori * randomSpread * weapon_configs[SniperChooseWeaponShotgun].kLeftRange;
             }
 
-            if (parent_.Uid != ClientGameLoop.CGL.UnitEntity.Uid)
-            {
-                ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(rd.pos, collisionPoint, 0.01f, Color.red));
-            }
+            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(rd.pos + rd.ori * new Vector3(0.2f, -0.2f, 1.45f), collisionPoint, 0.01f, Color.red));
         }
     }
 
@@ -886,10 +880,7 @@ internal class SniperCastValidator : BaseCastValidator
             collisionPoint = rd.pos + rd.ori * Vector3.forward * weapon_configs[SniperChooseWeaponMedigun].kLeftRange;
         }
 
-        if (parent_.Uid != ClientGameLoop.CGL.UnitEntity.Uid)
-        {
-            ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(rd.pos, collisionPoint, 0.01f, Color.green));
-        }
+        ClientGameLoop.CGL.LocalEntityManager.AddLocalEffect(new LaserEffect(rd.pos + rd.ori * new Vector3(0.10f, -0.3f, 0.9f), collisionPoint, 0.01f, Color.green));
     }
 
     /// <summary>
