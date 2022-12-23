@@ -89,7 +89,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
     protected Vector3 defaultCapsuleDimentions_;
     protected BaseCastValidator baseValidator_;
     protected EntityManager em_;
-    protected float _moveSpeedModifier = 0.0f; // [-inf, +inf]
+    internal float moveSpeedModifier_ { get; private set; } // [-inf, +inf]
 
     /// <summary>
     /// Called by SetInputs() for specific class
@@ -470,7 +470,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
             default:
             {
                 // speed modifier is a value [0, +inf] multiplied by character's regular speed
-                float speedModifier = 1 + (float)Math.Max(-1.0, _moveSpeedModifier);
+                float speedModifier = 1 + (float)Math.Max(-1.0, moveSpeedModifier_);
                 ConductGroundAirMovement(ref currentVelocity, deltaTime, MaxStableMoveSpeed * speedModifier);
 
                 // Handle jumping
@@ -481,7 +481,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
                     // See if we actually are allowed to jump
                     if (
                         !_jumpConsumed
-                        && _moveSpeedModifier > -1
+                        && moveSpeedModifier_ > -1
                         && (
                             (AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround)
                             || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime
@@ -509,7 +509,7 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
                         _jumpedThisFrame = true;
                     }
                     // See if we actually are allowed to jump
-                    else if (DoubleJumpEnabled && _moveSpeedModifier > -1 && !_doubleJumpConsumed && !Motor.GroundingStatus.IsStableOnGround)
+                    else if (DoubleJumpEnabled && moveSpeedModifier_ > -1 && !_doubleJumpConsumed && !Motor.GroundingStatus.IsStableOnGround)
                     {
                         // Calculate jump direction before ungrounding
                         Vector3 jumpDirection = Motor.CharacterUp;
@@ -869,6 +869,6 @@ internal abstract class BaseControllerKin : MonoBehaviour, ICharacterController
     /// <param name="speed_mod">[-1, +inf] float. negative means target gets slowed by some percentage (-0.5 is a 50% slow)</param>
     internal void setSpeedModifier(float speed_mod)
     {
-        _moveSpeedModifier += speed_mod;
+        moveSpeedModifier_ += speed_mod;
     }
 }

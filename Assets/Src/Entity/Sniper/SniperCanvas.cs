@@ -26,6 +26,9 @@ internal class SniperCanvas : BaseCanvas
     private List<Image> poisonFx_ = new List<Image>();
     private float currentPoisonAlpha = 0;
 
+    private List<Image> thunderFx_ = new List<Image>();
+    private float currentThunderAlpha = 0;
+
     /// <summary>
     /// Start is called before the first frame update
     /// </summary>
@@ -60,6 +63,15 @@ internal class SniperCanvas : BaseCanvas
             poisonFx_.Add(ImageComponent.GetComponent<Image>());
         }
         UpdatePoisonZoneFxAlpha();
+
+        var ThundercloudUiFxTransform = transform.Find("ThundercloudUiFx");
+        string[] thunderFxNames = { "Down", "Up", "Left", "Right" };
+        foreach (string name in thunderFxNames)
+        {
+            var ImageComponent = ThundercloudUiFxTransform.Find(name);
+            thunderFx_.Add(ImageComponent.GetComponent<Image>());
+        }
+        UpdateThundercloudFxAlpha();
     }
 
     /// <summary>
@@ -104,6 +116,7 @@ internal class SniperCanvas : BaseCanvas
             validator_.currAmmoMedigun_.ToString() + "/" + SniperCastValidator.weapon_configs[CastCode.SniperChooseWeaponMedigun].kMaxAmmo.ToString();
 
         UpdatePoisonZoneFxAlpha();
+        UpdateThundercloudFxAlpha();
     }
 
     /// <summary>
@@ -248,6 +261,14 @@ internal class SniperCanvas : BaseCanvas
                 currentPoisonAlpha = 1;
             }
         }
+        else if (rd.effect_source_type == CastCode.ThorThunderCloudTick)
+        {
+            currentThunderAlpha += 0.3f;
+            if (currentThunderAlpha > 1)
+            {
+                currentThunderAlpha = 1;
+            }
+        }
     }
 
     /// <summary>
@@ -295,6 +316,20 @@ internal class SniperCanvas : BaseCanvas
         foreach (var poisonImage in poisonFx_)
         {
             poisonImage.color = new Color(1f, 1f, 1f, currentPoisonAlpha);
+        }
+    }
+
+    private void UpdateThundercloudFxAlpha()
+    {
+        currentThunderAlpha -= 0.01f;
+        if (currentThunderAlpha < 0)
+        {
+            currentThunderAlpha = 0;
+        }
+
+        foreach (var thunderImage in thunderFx_)
+        {
+            thunderImage.color = new Color(1f, 1f, 1f, currentThunderAlpha);
         }
     }
 }

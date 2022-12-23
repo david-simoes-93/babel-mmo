@@ -147,24 +147,14 @@ internal class SniperControllerKin : BaseControllerKin
         {
             case CharacterState.SniperCrouching:
             {
-                float speedModifier = 1 + (float)Math.Max(-1.0, _moveSpeedModifier);
-                ConductGroundAirMovement(ref currentVelocity, deltaTime, MaxStableMoveSpeed * speedModifier * 0.5f);
-
-                // unable to jump
-
-                // Take into account additive velocity
-                if (_internalVelocityAdd.sqrMagnitude > 0f)
-                {
-                    currentVelocity += _internalVelocityAdd;
-                    _internalVelocityAdd = Vector3.zero;
-                }
-                break;
+                // act as default
+                return false;
             }
             default:
                 return false;
         }
 
-        return true;
+        // return true;
     }
 
     /// <summary>

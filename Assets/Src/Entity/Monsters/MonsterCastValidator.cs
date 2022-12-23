@@ -447,7 +447,7 @@ internal class MonsterCastValidator : BaseCastValidator
             if (otherChar.UnitTransform().position.y > rd.pos.y)
                 continue;
 
-            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, 80));
+            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, 50));
             //GameDebug.Log("ThorSlam: " + otherChar.Name + " @ " + otherChar.Health);
         }
     }
@@ -502,7 +502,7 @@ internal class MonsterCastValidator : BaseCastValidator
             if (otherChar.Type == UnitEntityCode.kMagnet)
                 continue;
             // damage is 40 for first target, 60 for second, 80 for third, etc
-            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, 40 + 20 * targetIndex));
+            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, 20 + 10 * targetIndex));
             GameDebug.Log("ThorChainLightning: " + otherChar.Name + " @ " + otherChar.Health);
         }
     }

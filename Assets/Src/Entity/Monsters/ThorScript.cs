@@ -14,7 +14,7 @@ internal class ThorScript : MonoBehaviour, IConfigurableMonster
 
     private readonly System.Random random_ = new System.Random();
 
-    private const float kAggroRange = 15;
+    private const float kAggroRange = 20;
     private const float kSpawnPointRadius = 1;
     private const float kMoveIfFurtherAwayThan = 3;
 
@@ -141,8 +141,8 @@ internal class ThorScript : MonoBehaviour, IConfigurableMonster
                     magnet_uids_[magnet_uids_.Count - 1],
                     "Magnet" + magnet_uids_.Count,
                     UnitEntityCode.kMagnet,
-                    100,
-                    100,
+                    50,
+                    50,
                     new Vector3(31 + random_.Next(-10, 10), 15, 102 + random_.Next(-10, 10)),
                     Quaternion.identity,
                     0
@@ -224,7 +224,7 @@ internal class ThorScript : MonoBehaviour, IConfigurableMonster
     /// </summary>
     private void ProcessSlam()
     {
-        if (!parent_.IsDead && parent_.Health < lastSlamHealth_ - parent_.MaxHealth * 0.1)
+        if (!parent_.IsDead && parent_.Health < lastSlamHealth_ - parent_.MaxHealth * 0.1 && parent_.Controller.moveSpeedModifier_ > -1)
         {
             float heightModifier = parent_.UnitTransform().position.y + 0.2f;
             ReliableData rd = CastUtils.MakeThorSlam(uid_, new Vector3(transform.position.x, heightModifier, transform.position.z), transform.rotation);
