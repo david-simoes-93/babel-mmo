@@ -17,14 +17,14 @@ internal class CylinderEffect : ILocalEffect
     /// <param name="ori">Target direction</param>
     /// <param name="length">Cylinder length</param>
     /// <param name="decay">How fast Cylinder decays (subtracts from kStartingWidth every frame)</param>
-    internal CylinderEffect(Vector3 src, Quaternion ori, float length, float decay, Vector3 src_offset)
+    internal CylinderEffect(Vector3 src, Quaternion ori, float length, float decay)
     {
         decay_ = decay;
 
         myGameObject_ = Object.Instantiate(Globals.kCylinderPrefab);
         myGameObject_.transform.SetPositionAndRotation(src, ori);
         cylGameObject = myGameObject_.transform.Find("Cylinder").gameObject.transform;
-        cylGameObject.transform.localPosition = new Vector3(src_offset.x, src_offset.y, length / 2 + src_offset.z);
+        cylGameObject.transform.localPosition = new Vector3(0, 0, length / 2);
         cylGameObject.localScale = new Vector3(cylGameObject.localScale.x, length / 2, cylGameObject.localScale.z);
     }
 
