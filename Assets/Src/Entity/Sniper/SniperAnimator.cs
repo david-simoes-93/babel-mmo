@@ -22,7 +22,6 @@ internal class SniperAnimator : BaseAnimator
         CharacterState cState = parent_.Controller.CurrentCharacterState;
         if (cState == CharacterState.SniperCrouching)
         {
-            // TODO sniper crouched movement
             newAnimatorState = EntityAnimation.kCrouch;
         }
         else

@@ -8,13 +8,13 @@ internal class MonsterCastValidator : BaseCastValidator
 
     internal const int kAttackLeftCooldown = 1000,
         kAttackLeftRange = 4,
-        kAttackLeftDamage = 10;
+        kAttackLeftDamage = 7;
     internal const int kAttackRightCooldown = 2000,
         kAttackRightRange = 2,
         kAttackRightDamage = 20;
     internal const int kRangedAttackCooldown = 1000,
         kRangedAttackRange = 9,
-        kRangedAttackDamage = 5;
+        kRangedAttackDamage = 3;
 
     /// <summary>
     /// Called by Validate() to determine validity of a class-specific CastRD (ability not in cooldown, valid targets, etc)
@@ -447,7 +447,7 @@ internal class MonsterCastValidator : BaseCastValidator
             if (otherChar.UnitTransform().position.y > rd.pos.y)
                 continue;
 
-            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, 80));
+            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, 50));
             //GameDebug.Log("ThorSlam: " + otherChar.Name + " @ " + otherChar.Health);
         }
     }
@@ -502,7 +502,7 @@ internal class MonsterCastValidator : BaseCastValidator
             if (otherChar.Type == UnitEntityCode.kMagnet)
                 continue;
             // damage is 40 for first target, 60 for second, 80 for third, etc
-            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, 40 + 20 * targetIndex));
+            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(parent_.Uid, otherChar.Uid, rd.type, 20 + 10 * targetIndex));
             GameDebug.Log("ThorChainLightning: " + otherChar.Name + " @ " + otherChar.Health);
         }
     }

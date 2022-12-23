@@ -23,6 +23,8 @@ internal class FreyjaScript : MonoBehaviour, IConfigurableMonster
     private const float kSpawnPointRadius = 1;
     private const float kMoveIfFurtherAwayThan = 3;
 
+    private const int kAmountOfValkyriesPhase2 = 2;
+
     private UnityEngine.AI.NavMeshAgent nav_agent_;
 
     private int last_hp_when_poison_zone_was_cast_;
@@ -224,7 +226,7 @@ internal class FreyjaScript : MonoBehaviour, IConfigurableMonster
     {
         if (!parent_.IsDead && parent_.Health < parent_.MaxHealth * 0.25 && valkyrie_uids_25_ == null)
         {
-            valkyrie_uids_25_ = new int[2];
+            valkyrie_uids_25_ = new int[kAmountOfValkyriesPhase2];
             for (int i = 0; i < valkyrie_uids_25_.Length; i++)
             {
                 valkyrie_uids_25_[i] = em_.GetValidNpcUid();
@@ -262,7 +264,7 @@ internal class FreyjaScript : MonoBehaviour, IConfigurableMonster
     /// </summary>
     private void ProcessPoisonZones()
     {
-        if (!parent_.IsDead && parent_.Health <= last_hp_when_poison_zone_was_cast_ - parent_.MaxHealth * 0.05)
+        if (!parent_.IsDead && parent_.Health <= last_hp_when_poison_zone_was_cast_ - parent_.MaxHealth * 0.10)
         {
             // pick a random valid target (if one exists)
             List<UnitEntity> players = FindEntityUtils.FindEntitiesWithinRadius(em_, spawn_point_, kAggroRange, new int[] { uid_ });

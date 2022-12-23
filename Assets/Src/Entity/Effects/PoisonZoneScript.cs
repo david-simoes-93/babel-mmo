@@ -28,7 +28,7 @@ internal class PoisonZoneScript : MonoBehaviour, IConfigurableEffect
 
         foreach (UnitEntity otherChar in collidedTargets)
         {
-            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(uid_, otherChar.Uid, CastCode.FreyjaPoisonZoneTick, 5));
+            otherChar.EntityManager.AsyncCreateTempEvent(new CombatEffectRD(uid_, otherChar.Uid, CastCode.FreyjaPoisonZoneTick, 2));
         }
     }
 
