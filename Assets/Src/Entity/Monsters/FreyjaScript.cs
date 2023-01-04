@@ -19,7 +19,7 @@ internal class FreyjaScript : MonoBehaviour, IConfigurableMonster
 
     private readonly System.Random random_ = new System.Random();
 
-    private const float kAggroRange = 15;
+    private const float kAggroRange = 20;
     private const float kSpawnPointRadius = 1;
     private const float kMoveIfFurtherAwayThan = 3;
 

@@ -103,16 +103,17 @@ internal class ThorScript : MonoBehaviour, IConfigurableMonster
             }
         }
 
-        // AoE
-        if (closestEntity != null)
+        if (!parent_.IsDead && !parent_.IsStunned && parent_.LeashedBy == null && closestEntity != null)
+        {
+            // AoE
             ProcessSlam();
+
+            // chain lightning
+            ProcessChainLightning(closestEntity);
+        }
 
         // spawn adds that wont move
         ProcessMagnet();
-
-        // chain lightning
-        if (closestEntity != null)
-            ProcessChainLightning(closestEntity);
 
         // cloud slowly rotating around the room
         ProcessCloud(closestEntity);
