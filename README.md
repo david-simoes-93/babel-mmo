@@ -2,7 +2,8 @@
 
 Check out our Babel [playlist](https://www.youtube.com/playlist?list=PLDLzwYVrKJNHCbL-mJy7_uNHo7Txkg3-B)!
 
-![https://www.youtube.com/watch?v=7QdF_CIBG1g](https://user-images.githubusercontent.com/9117323/211313880-3e901c58-9895-4902-9d3a-3cb4697cc52c.png)
+[![BabelThumbnail](https://user-images.githubusercontent.com/9117323/211313880-3e901c58-9895-4902-9d3a-3cb4697cc52c.png)](https://www.youtube.com/watch?v=7QdF_CIBG1g&list=PLDLzwYVrKJNHCbL-mJy7_uNHo7Txkg3-B)
+
 
 ## What is Babel?
 
