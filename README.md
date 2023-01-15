@@ -58,7 +58,7 @@ For the server, on Unity, go to `File` > `Build Settings` and build `InitialScen
 
 For the client, either build Babel without the `Server Build` option or just run things from within the Unity Editor.
 
-You need a server running before running the client. You can run multiple clients on the same server. Download compiled binares [here](https://www.dropbox.com/s/w9c7ops67lojzrl/babel.zip).
+You need a server running before running the client. You can connect multiple clients on the same machine to a server running locally. Check "Releases" for compiled binaries.
 
 ## TODO
 
@@ -86,7 +86,8 @@ There are many things to add:
 Bugs:
 - Balance bosses for 4 players
 - It's possible for a client to connect while server is starting-up, which causes a duplicate player to show up
-- Valkyries sometimes don't drop players and they get stuck in midair
+- Valkyries sometimes don't drop players and they get stuck in midair. Couldn't replicate locally
+- Seems like lately there was some bug where entities remained at 1hp instead of dying? Couldn't replicate locally
 - Many others, surely
 
 ## Want to contribute?
